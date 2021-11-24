@@ -50,7 +50,7 @@ fn main() -> Result<()> {
     let user_name = UserName & tx;
     user_name.set(&[2], &[5])?;
     println!("main get {:?}", user_name.get(&[2])?);
-    (user_name - &[2])?;
+    (user_name - [2])?;
     println!("main get after del {:?}", user_name.get(&[2])?);
 
     let tag = Tag & tx;
@@ -64,12 +64,12 @@ fn main() -> Result<()> {
     dbg!(tag.get(&[1])?);
 
     // del需要传入val，只删除精确匹配到的
-    dbg!(tag.del(&[1],&[2])?);
+    dbg!(tag.del(&[1], &[2])?);
 
     dbg!(tag.get(&[1])?);
 
     // 删除这个key所有的val
-    (tag - &[1])?;
+    (tag - [1])?;
 
     dbg!(tag.get(&[1])?);
   }
@@ -85,6 +85,9 @@ output as below
 ```
 mdbx file path /root/git/mdbx/target/debug/examples/test
 mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.1
+main get Some([5])
+main get after del None
+thread None
 ```
 
 ## 引子
@@ -98,6 +101,8 @@ lmdb是一个超级快的嵌入式键值数据库，[性能测试对比如下图
 ![](http://www.lmdb.tech/bench/inmem/InMem20Mperf.png)
 
 全文搜索引擎[MeiliSearch](https://docs.meilisearch.com/reference/under_the_hood/storage.html#measured-disk-usage)就是基于lmdb开发的。
+
+[深度学习框架caffe也用lmdb作为数据存储](https://docs.nvidia.com/deeplearning/dali/user-guide/docs/examples/general/data_loading/dataloading_lmdb.html)。
 
 mdbx在嵌入式性能测试基准[ioarena](https://github.com/pmwkaa/ioarena)中lmdb还要快30% 。
 
