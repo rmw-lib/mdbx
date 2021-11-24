@@ -50,11 +50,13 @@ fn main() -> Result<()> {
     let user_name = UserName & tx;
     user_name.set(&[2], &[5])?;
     println!("main get {:?}", user_name.get(&[2])?);
+    (user_name - &[2])?;
     println!("main get after del {:?}", user_name.get(&[2])?);
 
     let tag = Tag & tx;
 
     // 一个键可以对应多个值
+    tag.set(&[1], &[1])?;
     tag.set(&[1], &[2])?;
     tag.set(&[1], &[3])?;
     tag.set(&[1], &[4])?;
@@ -95,7 +97,7 @@ lmdb是一个超级快的嵌入式键值数据库，[性能测试对比如下图
 
 ![](http://www.lmdb.tech/bench/inmem/InMem20Mperf.png)
 
-全文搜索引擎[MeiliSearch](https://www.meilisearch.com)就是基于lmdb开发的。
+全文搜索引擎[MeiliSearch](https://docs.meilisearch.com/reference/under_the_hood/storage.html#measured-disk-usage)就是基于lmdb开发的。
 
 mdbx在嵌入式性能测试基准[ioarena](https://github.com/pmwkaa/ioarena)中lmdb还要快30% 。
 
