@@ -41,7 +41,7 @@ fn main() -> Result<()> {
     let user_name = UserName & tx;
     user_name.set(&[2], &[5])?;
     println!("main get {:?}", user_name.get(&[2])?);
-    (user_name - &[2])?;
+    (user_name - [2])?;
     println!("main get after del {:?}", user_name.get(&[2])?);
 
     let tag = Tag & tx;
@@ -55,12 +55,12 @@ fn main() -> Result<()> {
     dbg!(tag.get(&[1])?);
 
     // del需要传入val，只删除精确匹配到的
-    dbg!(tag.del(&[1],&[2])?);
+    dbg!(tag.del(&[1], &[2])?);
 
     dbg!(tag.get(&[1])?);
 
     // 删除这个key所有的val
-    (tag - &[1])?;
+    (tag - [1])?;
 
     dbg!(tag.get(&[1])?);
   }

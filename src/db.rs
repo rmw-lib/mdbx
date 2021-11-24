@@ -1,7 +1,7 @@
-use crate::{ok_err, put, tx::PtrTx, run};
+use crate::{ok_err, put, run, tx::PtrTx};
 use anyhow::Result;
 pub use ffi::{
-  mdbx_get, mdbx_is_dirty, mdbx_put, MDBX_db_flags_t, MDBX_dbi, MDBX_error_t, MDBX_val, mdbx_del,
+  mdbx_del, mdbx_get, mdbx_is_dirty, mdbx_put, MDBX_db_flags_t, MDBX_dbi, MDBX_error_t, MDBX_val,
 };
 use libc::c_void;
 use std::os::raw::c_char;
@@ -45,8 +45,8 @@ impl Db {
     self.put(key, val, put::Flag::MDBX_UPSERT)
   }
 
-  pub fn del(&self, key:impl AsRef<[u8]>, val: impl AsRef<[u8]>) -> Result<bool> {
-    match run!(mdbx_del(self.0,self.1,&val!(key), &val!(val))) {
+  pub fn del(&self, key: impl AsRef<[u8]>, val: impl AsRef<[u8]>) -> Result<bool> {
+    match run!(mdbx_del(self.0, self.1, &val!(key), &val!(val))) {
       MDBX_error_t::MDBX_SUCCESS => Ok(true),
       MDBX_error_t::MDBX_NOTFOUND => Ok(false),
       err => Err(crate::err::Error(err).into()),
@@ -77,11 +77,10 @@ impl Db {
   }
 }
 
-
-impl<T:AsRef<[u8]>> std::ops::Sub<T> for Db {
+impl<T: AsRef<[u8]>> std::ops::Sub<T> for Db {
   type Output = Result<bool>;
   fn sub(self, key: T) -> Self::Output {
-    match run!(mdbx_del(self.0,self.1,&val!(key), null())) {
+    match run!(mdbx_del(self.0, self.1, &val!(key), null())) {
       MDBX_error_t::MDBX_SUCCESS => Ok(true),
       MDBX_error_t::MDBX_NOTFOUND => Ok(false),
       err => Err(crate::err::Error(err).into()),
