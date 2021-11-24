@@ -26,6 +26,8 @@ lmdb是一个超级快的嵌入式键值数据库，[性能测试对比如下图
 
 全文搜索引擎[MeiliSearch](https://docs.meilisearch.com/reference/under_the_hood/storage.html#measured-disk-usage)就是基于lmdb开发的。
 
+[深度学习框架caffe也用lmdb作为数据存储](https://docs.nvidia.com/deeplearning/dali/user-guide/docs/examples/general/data_loading/dataloading_lmdb.html)。
+
 mdbx在嵌入式性能测试基准[ioarena](https://github.com/pmwkaa/ioarena)中lmdb还要快30% 。
 
 ![](https://raw.githubusercontent.com/wiki/erthink/libmdbx/img/perf-slide-1.png)
