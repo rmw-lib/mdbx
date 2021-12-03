@@ -1,0 +1,5 @@
+mdbx file path /root/git/mdbx/target/debug/examples/test
+mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.1
+main get Some([5])
+main get after del None
+thread None
