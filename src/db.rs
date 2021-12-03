@@ -167,4 +167,3 @@ impl<'a, K: Data, V: Data> Db<'a, kind::Dup, K, V> {
     crate::iter::_dup(*self | crate::iter::dup, key)
   }
 }
-
