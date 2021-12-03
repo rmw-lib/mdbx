@@ -9,7 +9,11 @@ use crate::{
 use anyhow::Result;
 pub use ffi::{mdbx_cursor_open, mdbx_put, MDBX_dbi, MDBX_error_t, MDBX_val};
 use paste::paste;
-use std::{cell::Cell, os::raw::c_char, ptr::null_mut};
+use std::{
+  cell::Cell,
+  os::raw::c_char,
+  ptr::{null, null_mut},
+};
 
 pub mod kind {
   pub struct Dup();
@@ -109,7 +113,12 @@ pub trait Trait<'a, K: Data, V: Data>: IntoIterator + Copy {
     rt!(self, get, key, &mut val, true, false)
   }
 
-  fn del<RK: AsRef<[u8]>, RV: AsRef<[u8]>>(
+  fn del<RK: AsRef<[u8]>>(&self, key: impl ToAsRef<K, RK>) -> Result<bool> {
+    let key = key.to_as_ref();
+    rt!(self, del, key, null(), true, false)
+  }
+
+  fn del_val<RK: AsRef<[u8]>, RV: AsRef<[u8]>>(
     &self,
     key: impl ToAsRef<K, RK>,
     val: impl ToAsRef<V, RV>,
@@ -159,15 +168,3 @@ impl<'a, K: Data, V: Data> Db<'a, kind::Dup, K, V> {
   }
 }
 
-// 删除一个键
-/*
-impl<'a, T: ToAsRef<dyn AsRef<[u8]>>, K: Data, V: Data, Kind> std::ops::Sub<T>
-  for Db<'a, Kind, K, V>
-{
-  type Output = Result<bool>;
-  fn sub(self, key: T) -> Self::Output {
-    let key = key.to_as_ref();
-    rt!(self, del, key, null(), true, false)
-  }
-}
-*/
