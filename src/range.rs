@@ -17,11 +17,6 @@ pub struct RangeX<Range, K: FromMdbx, T: ToAsRef<K, RK>, RK: AsRef<[u8]>>(
   PhantomData<(K, T, RK)>,
 );
 
-pub struct DbRange<'a, Kind, Range, K: FromMdbx, V: FromMdbx, T: ToAsRef<K, RK>, RK: AsRef<[u8]>>(
-  &'a Db<Kind, K, V>,
-  RangeX<Range, K, T, RK>,
-);
-
 trait IntoInner<T> {
   fn into_inner(self) -> (T, T);
 }
@@ -181,14 +176,27 @@ db_range!(RangeFrom, range_from);
 db_range!(RangeTo,range_to,>=);
 db_range!(RangeToInclusive,range_to,>);
 
-impl<'a, Kind, K: FromMdbx, V: FromMdbx> Db<Kind, K, V> {
-  pub fn range<RangeType, RK: AsRef<[u8]>, T: ToAsRef<K, RK>>(
-    &'a self,
-    range: impl Into<RangeX<RangeType, K, T, RK>>,
-  ) -> DbRange<'a, Kind, RangeType, K, V, T, RK> {
-    DbRange(self, range.into())
+macro_rules! cls {
+  ($fn:ident, $cls:ident)=>{
+    pub struct $cls<'a, Kind, Range, K: FromMdbx, V: FromMdbx, T: ToAsRef<K, RK>, RK: AsRef<[u8]>>(
+      &'a Db<Kind, K, V>,
+      RangeX<Range, K, T, RK>,
+    );
+
+    impl<'a, Kind, K: FromMdbx, V: FromMdbx> Db<Kind, K, V> {
+      pub fn $fn<RangeType, RK: AsRef<[u8]>, T: ToAsRef<K, RK>>(
+        &'a self,
+        range: impl Into<RangeX<RangeType, K, T, RK>>,
+      ) -> $cls<'a, Kind, RangeType, K, V, T, RK> {
+        $cls(self, range.into())
+      }
+    }
   }
 }
+
+cls!(range,DbRange);
+cls!(range_rev,DbRangeRev);
+
 
 /*
 type IterRangeTo<'a, Kind, K: FromMdbx, V: FromMdbx, T: ToAsRef<K, RK>, RK: AsRef<[u8]>> = <DbRange<'a, Kind, RangeTo<T>, K, V, T, RK> as IntoIterator>::IntoIter;
