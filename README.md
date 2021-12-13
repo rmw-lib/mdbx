@@ -49,7 +49,9 @@
 
 与此同时，[mdbx 改进了不少 lmdb 的缺憾](https://github.com/erthink/libmdbx#improvements-beyond-lmdb)，因此 Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX [^erigon] 。
 
-## 基础示例
+## 使用示例
+
+### 写和读 : set & get
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
 
@@ -60,11 +62,93 @@ use mdbx::prelude::*;
 
 lazy_static! {
   pub static ref MDBX: Env = {
-    let mut dir = std::env::current_exe().unwrap();
-    dir.pop();
-    dir.push("main.mdb");
-    println!("mdbx file path {}", dir.display());
-    dir.into()
+    let mut db_path = std::env::current_exe().unwrap();
+    db_path.set_extension("mdb");
+    println!("mdbx file path {}", db_path.display());
+    db_path.into()
+  };
+}
+
+env_rw!(MDBX, r, w);
+
+mdbx! {
+  MDBX // 数据库ENV的变量名
+  Test // 数据库 Test
+}
+
+fn main() -> Result<()> {
+  unsafe {
+    println!(
+      "mdbx version https://github.com/erthink/libmdbx/releases/tag/v{}.{}.{}",
+      mdbx_version.major, mdbx_version.minor, mdbx_version.release
+    );
+  }
+
+  // 多线程读写
+  let t = std::thread::spawn(|| {
+    let tx = w!();
+    let test = tx | Test;
+    test.set([1, 2], [6])?;
+    println!("test1 get {:?}", test.get([1, 2]));
+    Ok(())
+  });
+
+  t.join().unwrap()?;
+
+  Ok(())
+}
+```
+
+运行输出如下
+
+```
+   Compiling mdbx v0.0.2 (/Users/z/rmw/mdbx)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.85s
+     Running `target/debug/examples/01`
+mdbx file path /Users/z/rmw/mdbx/target/debug/examples/01.mdb
+mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.2
+test1 get Ok(Some(Bin([6])))
+```
+
+
+### 代码解读
+
+#### anyhow 和 lazy_static
+
+```
+use anyhow::{Ok, Result};
+use lazy_static::lazy_static;
+```
+
+[anyhow](https://rustmagazine.github.io/rust_magazine_2021/chapter_2/rust_error_handle.html#thiserror--anyhow) 是 rust 的错误处理库。
+
+[lazy_static](https://juejin.cn/post/7007336922817232927) 是延迟初始化的静态变量。
+
+这两个库很常见，我不赘言。
+
+#### 数据库环境配置 pub static ref MDBX: Env
+
+#### 线程与事务
+
+同一线程同一时间只能启用一个事务。
+
+事务会在作用域结束时提交。
+
+### 遍历
+
+我们来看第二个例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) :
+
+```rust
+use anyhow::{Ok, Result};
+use lazy_static::lazy_static;
+use mdbx::prelude::*;
+
+lazy_static! {
+  pub static ref MDBX: Env = {
+    let mut db_path = std::env::current_exe().unwrap();
+    db_path.set_extension("mdb");
+    println!("mdbx file path {}", db_path.display());
+    db_path.into()
   };
 }
 
@@ -83,14 +167,6 @@ fn main() -> Result<()> {
       mdbx_version.major, mdbx_version.minor, mdbx_version.release
     );
   }
-
-  // 多线程并发读写
-  let t = std::thread::spawn(|| {
-    let tx = w!();
-    let test1 = tx | Test1;
-    test1.set([5], [6])?;
-    Ok(())
-  });
 
   {
     // 快捷写入
@@ -111,9 +187,8 @@ fn main() -> Result<()> {
     }
   }
 
+  // 在同一个事务中对多个数据库进行多个操作
   {
-    // 在同一个事务中对多个数据库进行多个操作
-
     let tx = w!();
     let test1 = tx | Test1;
     let test2 = tx | Test2;
@@ -142,8 +217,6 @@ fn main() -> Result<()> {
     // 事务会在作用域的结尾提交
   }
 
-  t.join().unwrap()?;
-
   Ok(())
 }
 ```
@@ -151,51 +224,26 @@ fn main() -> Result<()> {
 运行输出如下
 
 ```
-mdbx file path /Users/z/rmw/mdbx/target/debug/examples/main.mdb
+   Compiling mdbx v0.0.2 (/Users/z/rmw/mdbx)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.86s
+     Running `target/debug/examples/02`
+mdbx file path /Users/z/rmw/mdbx/target/debug/examples/02.mdb
 mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.2
 
 u16::from_le_bytes(Bin([4, 5])) = 1284
 
 -- loop test1 rev
-Bin([9]) = Bin([10, 12])
-Bin([8]) = Bin([9])
-Bin([5]) = Bin([6])
-Bin([2, 3]) = Bin([4, 5])
 Bin([2]) = Bin([3])
+Bin([2, 3]) = Bin([4, 5])
+Bin([8]) = Bin([9])
+Bin([9]) = Bin([10, 12])
 
 get after del Ok(None)
 
 -- loop test2
-Bin([97]) = Bin([98])
 Bin([114, 109, 119, 46, 108, 105, 110, 107]) = Bin([68, 111, 119, 110, 32, 119, 105, 116, 104, 32, 68, 97, 116, 97, 32, 72, 101, 103, 101, 109, 111, 110, 121])
+Bin([97]) = Bin([98])
 ```
-
-### 代码解读
-
-#### anyhow 和 lazy_static
-
-```
-use anyhow::{Ok, Result};
-use lazy_static::lazy_static;
-```
-
-[anyhow](https://rustmagazine.github.io/rust_magazine_2021/chapter_2/rust_error_handle.html#thiserror--anyhow) 是 rust 的错误处理库。
-
-[lazy_static](https://juejin.cn/post/7007336922817232927) 是延迟初始化的静态变量。
-
-这两个库很常见，我不赘言。
-
-#### pub static ref MDBX: Env
-
-
-
-
-
-### 数据库环境
-
-### 线程与事务
-
-同一线程同一时间只能启用一个事务。
 
 ## 数据类型
 
