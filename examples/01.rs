@@ -59,6 +59,10 @@ fn main() -> Result<()> {
       println!("{:?} = {:?}",k,v);
     }
 
+    test1.del([8])?;
+
+    println!("get after del {:?}", test1.get([8]));
+
     test2.set("rmw.link","Down with Data Hegemony · Cyberland Revolution")?;
 
     for (k,v) in test2 {

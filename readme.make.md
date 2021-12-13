@@ -4,6 +4,8 @@
 
 ## 引子
 
+在写『[人民网络][https://rmw.link]』，发现自己需要一个数据库。
+
 因为[mdbx-rs(mdbx-sys)不支持windows](https://github.com/vorot93/mdbx-rs/issues/1)，于是我自己动手封装一个支持windows版本。
 
 我在易用性上做了大量优化。
