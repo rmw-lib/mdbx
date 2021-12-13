@@ -111,9 +111,9 @@ test1 get Ok(Some(Bin([6])))
 ```
 
 
-### 代码解读
+#### 代码解读
 
-#### anyhow 和 lazy_static
+##### anyhow 和 lazy_static
 
 ```
 use anyhow::{Ok, Result};
@@ -126,9 +126,9 @@ use lazy_static::lazy_static;
 
 这两个库很常见，我不赘言。
 
-#### 数据库环境配置 pub static ref MDBX: Env
+##### 数据库环境配置 pub static ref MDBX: Env
 
-#### 线程与事务
+##### 线程与事务
 
 同一线程同一时间只能启用一个事务。
 
