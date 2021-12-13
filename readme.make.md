@@ -55,7 +55,6 @@
 
 然后运行 `cargo run --example 01` ，就运行了 `examples/01.rs`
 
-
 ### 写和读 : set & get
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
@@ -69,7 +68,6 @@
 ```
 #include examples/01.out
 ```
-
 
 #### 代码解读
 
@@ -87,6 +85,12 @@ use lazy_static::lazy_static;
 这两个库很常见，我不赘言。
 
 ##### 数据库环境配置 pub static ref MDBX: Env
+
+这里创建了一个数据库环境。
+
+
+
+
 
 ##### 线程与事务
 
@@ -146,7 +150,6 @@ MDBX_DB_ACCEDE
 
 ### 默认自动生成的数据库标志
 
-
 ## 数据库环境全局设置
 
 ### 数据库最大个数
@@ -160,13 +163,12 @@ https://github.com/erthink/libmdbx#limitations
 
 - 最小 0，最大≈½页大小（默认 4K 页键最大大小为 2022 字节）。
 
-
 ## 引用说明
 
 [^erigon]: [Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。](https://github.com/ledgerwatch/erigon/wiki/Criteria-for-transitioning-from-Alpha-to-Beta#switch-from-lmdb-to-mdbx)
 
     他们列举了从 LMDB 过渡到 MDBX 的好处：
-
+    
     > Erigon 开始使用 BoltDB 数据库后端，然后增加了对 BadgerDB 的支持，最后完全迁移到 LMDB。在某些时候，我们遇到了稳定性问题，这些问题是由我们对 LMDB 的使用引起的，而这些问题是创造者没有预料到的。从那时起，我们一直在关注一个支持良好的 LMDB 的衍生产品，称为 MDBX，并希望使用他们的稳定性改进，并有可能在未来进行更多的合作。MDBX 的整合已经完成，现在是时候进行更多的测试和记录了。
     >
     > 从 LMDB 过渡到 MDBX 的好处：
