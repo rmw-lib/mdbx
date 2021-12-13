@@ -38,7 +38,7 @@
 
 [深度学习框架 caffe 也用 lmdb 作为数据存储](https://docs.nvidia.com/deeplearning/dali/user-guide/docs/examples/general/data_loading/dataloading_lmdb.html)。
 
-mdbx 在嵌入式性能测试基准 [ioarena](https://github.com/pmwkaa/ioarena) 中 lmdb 还要快 30% 。
+[mdbx 在嵌入式性能测试基准 ioarena 中 lmdb 还要快 30%](https://github.com/erthink/libmdbx#added-features) 。
 
 ![](https://raw.githubusercontent.com/wiki/erthink/libmdbx/img/perf-slide-1.png)
 ![](https://raw.githubusercontent.com/wiki/erthink/libmdbx/img/perf-slide-3.png)

@@ -58,7 +58,7 @@ Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。[^erig
 ```rust
 #![allow(non_upper_case_globals)]
 
-use anyhow::Result;
+use anyhow::{Result,Ok};
 use lazy_static::lazy_static;
 use mdbx::prelude::*;
 
@@ -88,12 +88,21 @@ fn main() -> Result<()> {
     );
   }
 
+  let t = std::thread::spawn(|| {
+    let tx = w!();
+    let test1 = tx | Test1;
+    test1.set([5],[6])?;
+    println!("test1.set");
+    Ok(())
+  });
+
   {
-    // 写入
+    // 快捷写入
     w!(Test1).set([2,3],[4,5])?;
   }
+
   {
-    // 读取
+    // 快捷读取
     match r!(Test1).get([2,3])? {
       Some(r)=>{
         println!("\nu16::from_le_bytes({:?}) = {}", r, u16::from_le_bytes((*r).try_into()?));
@@ -103,7 +112,7 @@ fn main() -> Result<()> {
   }
 
   {
-    // 在同一个事务中进行多个操作
+    // 在同一个事务中对多个数据库进行多个操作
 
     let tx = w!();
     let test1 = tx | Test1;
@@ -130,7 +139,10 @@ fn main() -> Result<()> {
       println!("{:?} = {:?}",k,v);
     }
 
+    // 事务会在作用域的结尾提交
   }
+
+  t.join().unwrap()?;
 
   Ok(())
 }
@@ -143,10 +155,12 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/main.mdb
 mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.2
 
 u16::from_le_bytes(Bin([4, 5])) = 1284
+test1.set
 
 -- loop test1 rev
 Bin([9]) = Bin([10, 12])
 Bin([8]) = Bin([9])
+Bin([5]) = Bin([6])
 Bin([2, 3]) = Bin([4, 5])
 Bin([2]) = Bin([3])
 
