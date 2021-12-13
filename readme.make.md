@@ -1,10 +1,10 @@
-# mdbx
+# 更好用的 libmdbx rust 封装
 
 [libmdbx](https://github.com/erthink/libmdbx) 数据库的`rust`封装。
 
 ## 引子
 
-在写『[人民网络][https://rmw.link]』，发现自己需要一个数据库。
+在写『[人民网络](https://rmw.link)』，感觉自己需要一个嵌入式数据库。
 
 因为[mdbx-rs(mdbx-sys)不支持windows](https://github.com/vorot93/mdbx-rs/issues/1)，于是我自己动手封装一个支持windows版本。
 
@@ -33,7 +33,7 @@ mdbx在嵌入式性能测试基准[ioarena](https://github.com/pmwkaa/ioarena)�
 
 [mdbx改进了不少lmdb的缺憾](https://github.com/erthink/libmdbx#improvements-beyond-lmdb)。
 
-[Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。](https://github.com/ledgerwatch/erigon/wiki/Criteria-for-transitioning-from-Alpha-to-Beta#switch-from-lmdb-to-mdbx)[^1]
+Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。[^erigon]
 
 
 
@@ -41,14 +41,14 @@ mdbx在嵌入式性能测试基准[ioarena](https://github.com/pmwkaa/ioarena)�
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs)。
 
-```
+```rust
 #include examples/01.rs
 ```
 
 运行输出如下
 
 ```
-#include examples/01.rs
+#include examples/01.out
 ```
 
 ## 数据库标志
@@ -95,29 +95,28 @@ https://github.com/erthink/libmdbx#limitations
 ---
 
 
+[^erigon]: [Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。](https://github.com/ledgerwatch/erigon/wiki/Criteria-for-transitioning-from-Alpha-to-Beta#switch-from-lmdb-to-mdbx)
 
-[^1] [Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。](https://github.com/ledgerwatch/erigon/wiki/Criteria-for-transitioning-from-Alpha-to-Beta#switch-from-lmdb-to-mdbx)
+    他们列举了从 LMDB 过渡到 MDBX 的好处：
 
-他们列举了从 LMDB 过渡到 MDBX 的好处：
-
-> Erigon开始使用BoltDB数据库后端，然后增加了对BadgerDB的支持，最后完全迁移到LMDB。在某些时候，我们遇到了稳定性问题，这些问题是由我们对LMDB的使用引起的，而这些问题是创造者没有预料到的。从那时起，我们一直在关注一个支持良好的LMDB的衍生产品，称为MDBX，并希望使用他们的稳定性改进，并有可能在未来进行更多的合作。MDBX的整合已经完成，现在是时候进行更多的测试和记录了。
->
-> 从LMDB过渡到MDBX的好处：
->
-> 1. 数据库文件的增长 "空间(geometry)" 工作正常。这一点很重要，尤其是在Windows上。在 LMDB 中，人们必须事先指定一次内存映射大小（目前我们默认使用 2Tb），如果数据库文件的增长超过这个限制，就必须重新启动这个过程。在 Windows 上，将内存映射大小设置为 2Tb 会使数据库文件一开始就有 2Tb 大，这不是很方便。在 MDBX 中，内存映射大小是以 2Gb 为单位递增的。这意味着偶尔的重新映射，但会带来更好的用户体验。
->
-> 2. MDBX对事务处理的并发使用有更严格的检查，以及在同一执行线程中的重叠读写事务。这使我们能够发现一些非明显的错误，并使行为更可预测。
->    在超过5年的时间里（自从它从LMDB中分离出来），MDBX积累了大量的安全修复和heisenbug修复，据我们所知，这些修复仍然存在于LMDB中。其中一些是我们在测试过程中发现的，而MDBX的维护者也认真对待，并及时进行了修复。
->
-> 3. 当涉及到不断修改数据的数据库时，它们会产生相当多的可回收空间（在LMDB术语中也被称为 "freelist"）。我们不得不给LMDB打上补丁，以修复在处理可回收空间时最严重的缺点（这里的分析：[https://github.com/ledgerwatch/erigon/wiki/LMDB-freelist-illustrated-guide）。MDBX对可回收空间的有效处理进行了特别的关注，到目前为止，还不需要打补丁。](https://github.com/ledgerwatch/erigon/wiki/LMDB-freelist-illustrated-guide%EF%BC%89%E3%80%82MDBX%E5%AF%B9%E5%8F%AF%E5%9B%9E%E6%94%B6%E7%A9%BA%E9%97%B4%E7%9A%84%E6%9C%89%E6%95%88%E5%A4%84%E7%90%86%E8%BF%9B%E8%A1%8C%E4%BA%86%E7%89%B9%E5%88%AB%E7%9A%84%E5%85%B3%E6%B3%A8%EF%BC%8C%E5%88%B0%E7%9B%AE%E5%89%8D%E4%B8%BA%E6%AD%A2%EF%BC%8C%E8%BF%98%E4%B8%8D%E9%9C%80%E8%A6%81%E6%89%93%E8%A1%A5%E4%B8%81%E3%80%82)
->
-> 4. 根据我们的测试，MDBX在我们的工作负载上表现得稍微好一些。
->
-> 5. MDBX暴露了更多的内部遥测数据 — 更多关于数据库内部发生的指标。而我们在Grafana中拥有这些数据 — 以便在应用设计上做出更好的决定。例如，在完全过渡到MDBX之后（移除对LMDB的支持），我们将实施 "提交半满事务 "策略，以避免溢出/未溢出的磁盘接触。这将进一步简化我们的代码，而不影响性能。
->
-> 6. MDBX支持 "Exclusive open "模式--我们将其用于数据库迁移，以防止任何其他读者在数据库迁移过程中访问数据库。
->
->    MDBX 支持“ Exclusive open”模式 — 我们使用它进行 DB 迁移，以防止任何其他读取器在 DB 迁移过程中访问数据库。
+    > Erigon开始使用BoltDB数据库后端，然后增加了对BadgerDB的支持，最后完全迁移到LMDB。在某些时候，我们遇到了稳定性问题，这些问题是由我们对LMDB的使用引起的，而这些问题是创造者没有预料到的。从那时起，我们一直在关注一个支持良好的LMDB的衍生产品，称为MDBX，并希望使用他们的稳定性改进，并有可能在未来进行更多的合作。MDBX的整合已经完成，现在是时候进行更多的测试和记录了。
+    >
+    > 从LMDB过渡到MDBX的好处：
+    >
+    > 1. 数据库文件的增长 "空间(geometry)" 工作正常。这一点很重要，尤其是在Windows上。在 LMDB 中，人们必须事先指定一次内存映射大小（目前我们默认使用 2Tb），如果数据库文件的增长超过这个限制，就必须重新启动这个过程。在 Windows 上，将内存映射大小设置为 2Tb 会使数据库文件一开始就有 2Tb 大，这不是很方便。在 MDBX 中，内存映射大小是以 2Gb 为单位递增的。这意味着偶尔的重新映射，但会带来更好的用户体验。
+    >
+    > 2. MDBX对事务处理的并发使用有更严格的检查，以及在同一执行线程中的重叠读写事务。这使我们能够发现一些非明显的错误，并使行为更可预测。
+    >    在超过5年的时间里（自从它从LMDB中分离出来），MDBX积累了大量的安全修复和heisenbug修复，据我们所知，这些修复仍然存在于LMDB中。其中一些是我们在测试过程中发现的，而MDBX的维护者也认真对待，并及时进行了修复。
+    >
+    > 3. 当涉及到不断修改数据的数据库时，它们会产生相当多的可回收空间（在LMDB术语中也被称为 "freelist"）。我们不得不给LMDB打上补丁，以修复在处理可回收空间时最严重的缺点（这里的分析：[https://github.com/ledgerwatch/erigon/wiki/LMDB-freelist-illustrated-guide）。MDBX对可回收空间的有效处理进行了特别的关注，到目前为止，还不需要打补丁。](https://github.com/ledgerwatch/erigon/wiki/LMDB-freelist-illustrated-guide%EF%BC%89%E3%80%82MDBX%E5%AF%B9%E5%8F%AF%E5%9B%9E%E6%94%B6%E7%A9%BA%E9%97%B4%E7%9A%84%E6%9C%89%E6%95%88%E5%A4%84%E7%90%86%E8%BF%9B%E8%A1%8C%E4%BA%86%E7%89%B9%E5%88%AB%E7%9A%84%E5%85%B3%E6%B3%A8%EF%BC%8C%E5%88%B0%E7%9B%AE%E5%89%8D%E4%B8%BA%E6%AD%A2%EF%BC%8C%E8%BF%98%E4%B8%8D%E9%9C%80%E8%A6%81%E6%89%93%E8%A1%A5%E4%B8%81%E3%80%82)
+    >
+    > 4. 根据我们的测试，MDBX在我们的工作负载上表现得稍微好一些。
+    >
+    > 5. MDBX暴露了更多的内部遥测数据 — 更多关于数据库内部发生的指标。而我们在Grafana中拥有这些数据 — 以便在应用设计上做出更好的决定。例如，在完全过渡到MDBX之后（移除对LMDB的支持），我们将实施 "提交半满事务 "策略，以避免溢出/未溢出的磁盘接触。这将进一步简化我们的代码，而不影响性能。
+    >
+    > 6. MDBX支持 "Exclusive open "模式--我们将其用于数据库迁移，以防止任何其他读者在数据库迁移过程中访问数据库。
+    >
+    >    MDBX 支持“ Exclusive open”模式 — 我们使用它进行 DB 迁移，以防止任何其他读取器在 DB 迁移过程中访问数据库。
 
 ## 关于
 
