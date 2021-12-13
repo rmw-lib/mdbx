@@ -16,11 +16,17 @@
 
 在写『[人民网络](https://rmw.link)』，感觉自己需要一个嵌入式数据库。
 
-因为 [mdbx-rs(mdbx-sys)不支持 windows](https://github.com/vorot93/mdbx-rs/issues/1)，于是我自己动手封装一个支持 windows 版本。
+是因为会涉及到一些网络吞吐的记录，读写频繁，`sqlite3` 还是太高级性能堪忧。
 
-我在易用性上做了大量优化。
+所以用更底层的键值数据库更为合适（[`lmdb` 比 `sqlite` 快 10 倍](https://discourse.world/h/2020/06/05/Shine-and-poverty-key-value-database-LMDB-in-applications-for-iOS)）。
 
-比如，可以一个模块中用 `lazy_static` 定义好所有数据库，然后用 `use` 引入，并且支持多线程访问。
+![](https://raw.githubusercontent.com/gcxfd/img/gh-pages/yxZV8x.jpg)
+
+最终，我选择了 `lmdb` 的魔改版 —— `mdbx` 。
+
+但现在 `mdbx` 的 `rust` 封装 [mdbx-rs(mdbx-sys)不支持 windows](https://github.com/vorot93/mdbx-rs/issues/1)，于是我自己动手封装一个支持 windows 的版本。
+
+我在易用性上做了大量工作。比如，可以一个模块中用 `lazy_static` 定义好所有数据库，然后用 `use` 引入，并且支持多线程访问。
 
 同时，支持多线程，用起来会很方便。
 
@@ -45,7 +51,7 @@ mdbx 在嵌入式性能测试基准 [ioarena](https://github.com/pmwkaa/ioarena)
 
 Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。[^erigon]
 
-## 使用教程
+## 基础示例
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
 
@@ -151,18 +157,25 @@ Bin([97]) = Bin([98])
 Bin([114, 109, 119, 46, 108, 105, 110, 107]) = Bin([68, 111, 119, 110, 32, 119, 105, 116, 104, 32, 68, 97, 116, 97, 32, 72, 101, 103, 101, 109, 111, 110, 121])
 ```
 
+### 数据库环境
+
+### 线程与事务
+
+同一线程同一时间只能启用一个事务。
+
 ## 数据类型
 
 ### 预置数据类型
 
 ### 自定义数据类型
 
+## 一个键对应多个值
+
+## 删除一个精确匹配的键值对
+
+## 迭代器
 
 ## 数据库标志
-
-### DUPSORT : 一个键对应多个值
-
-### 其他数据库标志
 
 [mdbx db flag list](https://erthink.github.io/libmdbx/group__c__dbi.html#gafe3bddb297b3ab0d828a487c5726f76a)
 
@@ -189,7 +202,7 @@ MDBX_DB_ACCEDE
 ### 默认自动生成的数据库标志
 
 
-## 全局设置
+## 数据库环境全局设置
 
 ### 数据库最大个数
 

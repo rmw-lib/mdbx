@@ -14,11 +14,17 @@
 
 在写『[人民网络](https://rmw.link)』，感觉自己需要一个嵌入式数据库。
 
-因为 [mdbx-rs(mdbx-sys)不支持 windows](https://github.com/vorot93/mdbx-rs/issues/1)，于是我自己动手封装一个支持 windows 版本。
+是因为会涉及到一些网络吞吐的记录，读写频繁，`sqlite3` 还是太高级性能堪忧。
 
-我在易用性上做了大量优化。
+所以用更底层的键值数据库更为合适（[`lmdb` 比 `sqlite` 快 10 倍](https://discourse.world/h/2020/06/05/Shine-and-poverty-key-value-database-LMDB-in-applications-for-iOS)）。
 
-比如，可以一个模块中用 `lazy_static` 定义好所有数据库，然后用 `use` 引入，并且支持多线程访问。
+![](https://raw.githubusercontent.com/gcxfd/img/gh-pages/yxZV8x.jpg)
+
+最终，我选择了 `lmdb` 的魔改版 —— `mdbx` 。
+
+但现在 `mdbx` 的 `rust` 封装 [mdbx-rs(mdbx-sys)不支持 windows](https://github.com/vorot93/mdbx-rs/issues/1)，于是我自己动手封装一个支持 windows 的版本。
+
+我在易用性上做了大量工作。比如，可以一个模块中用 `lazy_static` 定义好所有数据库，然后用 `use` 引入，并且支持多线程访问。
 
 同时，支持多线程，用起来会很方便。
 
