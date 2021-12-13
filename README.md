@@ -4,6 +4,14 @@
 
 [libmdbx](https://github.com/erthink/libmdbx) 数据库的`rust`封装。
 
+---
+
+目录 :
+
+[[toc]]
+
+---
+
 ## 引子
 
 在写『[人民网络](https://rmw.link)』，感觉自己需要一个嵌入式数据库。
@@ -37,11 +45,9 @@ mdbx在嵌入式性能测试基准[ioarena](https://github.com/pmwkaa/ioarena)�
 
 Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。[^erigon]
 
-
-
 ## 使用教程
 
-我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs)。
+我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
 
 ```rust
 #![allow(non_upper_case_globals)]
