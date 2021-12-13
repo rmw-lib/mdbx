@@ -26,7 +26,7 @@ mdbx! {
 
 macro_rules! range {
   ($var:ident, $range:expr) => {
-    println!("\n-- range {:?}", $range);
+    println!("\n-- {} range {:?}", stringify!($var), $range);
     for i in $var.range($range) {
       println!("{:?}", i);
     }
@@ -82,26 +82,26 @@ fn main() -> Result<()> {
     println!("\n### Test2");
     let tx = &MDBX.w()?;
 
-    let test = tx | Test2;
-    test.set(2, 9)?;
-    test.set(1, 2)?;
-    test.set(2, 4)?;
-    test.set(1, 5)?;
-    test.set(9, 7)?;
-    test.set(9, 1)?;
-    test.set(0, 0)?;
-    range!(test, 1..3);
-    range!(test, 1..=3);
-    range!(test, 3..1);
-    range!(test, 3..=2);
-    range!(test, 3..);
-    range!(test, 9..);
-    range!(test, 10..);
-    range!(test, 10..1);
-    range!(test, 10..7);
-    range!(test, 9..1);
-    range!(test, ..3);
-    range!(test, ..=3);
+    let test2 = tx | Test2;
+    test2.set(2, 9)?;
+    test2.set(1, 2)?;
+    test2.set(2, 4)?;
+    test2.set(1, 5)?;
+    test2.set(9, 7)?;
+    test2.set(9, 1)?;
+    test2.set(0, 0)?;
+    range!(test2, 1..3);
+    range!(test2, 1..=3);
+    range!(test2, 3..1);
+    range!(test2, 3..=2);
+    range!(test2, 3..);
+    range!(test2, 9..);
+    range!(test2, 10..);
+    range!(test2, 10..1);
+    range!(test2, 10..7);
+    range!(test2, 9..1);
+    range!(test2, ..3);
+    range!(test2, ..=3);
   }
   Ok(())
 }

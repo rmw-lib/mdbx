@@ -79,7 +79,6 @@ macro_rules! db_range {
   };
 }
 
-
 macro_rules! range_to {
   ($range:ident, $db:ident, $cursor:ident, $val:ident, $gt:tt) => {{
     let tx = $db.tx();
@@ -138,23 +137,23 @@ macro_rules! range_range_inclusive {
     let mut next: OP = unsafe { MaybeUninit::uninit().assume_init() };
 
     macro_rules! rt {
-      ($op:expr) => {{
-        cursor_get!($cursor, key, $val, $op, {
-          let cmp = unsafe { mdbx_cmp(tx, dbi, &mut key, &val!(end)) };
-          return if {
-            if next == OP::MDBX_NEXT {
-              cmp $gt 0
+        ($op:expr) => {{
+          cursor_get!($cursor, key, $val, $op, {
+            let cmp = unsafe { mdbx_cmp(tx, dbi, &mut key, &val!(end)) };
+            return if {
+              if next == OP::MDBX_NEXT {
+                cmp $gt 0
+              } else {
+                cmp $lt 0
+              }
+            } {
+              None
             } else {
-              cmp $lt 0
+              Some(item_kv!(tx, key, $val))
             }
-          } {
-            None
-          } else {
-            Some(item_kv!(tx, key, $val))
-          }
-        })
-      }};
-    }
+          })
+        }};
+      }
 
     from_fn(move || {
       if $val.iov_base.is_null() {
@@ -176,12 +175,11 @@ macro_rules! range_range_inclusive {
 db_range!(Range,range_range_inclusive,>=,<=);
 db_range!(RangeInclusive,range_range_inclusive,>,<);
 
-
 db_range!(RangeTo,range_to,>=);
 db_range!(RangeToInclusive,range_to,>);
 
 macro_rules! cls {
-  ($fn:ident, $cls:ident)=>{
+  ($fn:ident, $cls:ident) => {
     pub struct $cls<'a, Kind, Range, K: FromMdbx, V: FromMdbx, T: ToAsRef<K, RK>, RK: AsRef<[u8]>>(
       &'a Db<Kind, K, V>,
       RangeX<Range, K, T, RK>,
@@ -195,12 +193,11 @@ macro_rules! cls {
         $cls(self, range.into())
       }
     }
-  }
+  };
 }
 
-cls!(range,DbRange);
-cls!(range_rev,DbRangeRev);
-
+cls!(range, DbRange);
+cls!(range_rev, DbRangeRev);
 
 /*
 type IterRangeTo<'a, Kind, K: FromMdbx, V: FromMdbx, T: ToAsRef<K, RK>, RK: AsRef<[u8]>> = <DbRange<'a, Kind, RangeTo<T>, K, V, T, RK> as IntoIterator>::IntoIter;
