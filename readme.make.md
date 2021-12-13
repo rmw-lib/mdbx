@@ -1,6 +1,6 @@
 # mdbx
 
-[libmdbx](https://github.com/erthink/libmdbx) 的 rust 封装。
+[libmdbx](https://github.com/erthink/libmdbx) 数据库的`rust`封装。
 
 ## 引子
 
@@ -9,8 +9,6 @@
 我在易用性上做了大量优化。
 
 比如，可以一个模块中用`lazy_static`定义好所有数据库，然后用`use`引入，并且支持多线程访问。
-
-
 
 同时，支持多线程，用起来会很方便。
 
@@ -59,6 +57,16 @@ mdbx在嵌入式性能测试基准[ioarena](https://github.com/pmwkaa/ioarena)�
 
 
 
+
+
+
+
+
+## 支持多个不同值 DUPSORT
+
+
+
+## 数据库最大个数
 
 maxdbs 打开数据的时可以更新原有设置。
 一开始可以设置小一点的值，有需要再加大。
