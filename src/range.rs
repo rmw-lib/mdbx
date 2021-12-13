@@ -57,6 +57,29 @@ macro_rules! cursor_get {
   }};
 }
 
+macro_rules! db_range {
+  ($range:ident,$impl:ident) => {
+    db_range!($range,$impl,);
+  };
+  ($range:ident,$impl:ident, $($arg:tt),*) => {
+    impl<'a, Kind, K: FromMdbx, V: FromMdbx, T: ToAsRef<K, RK>, RK: AsRef<[u8]>> IntoIterator
+      for DbRange<'a, Kind, $range<T>, K, V, T, RK>
+    {
+      type Item = (K, V);
+      type IntoIter = impl std::iter::Iterator<Item = (K, V)>;
+      fn into_iter(self) -> <Self as IntoIterator>::IntoIter {
+        let db = self.0;
+
+        let cursor = db.cursor().unwrap();
+        let mut val = mdbx_val_empty();
+        let range = self.1.0;
+        $impl!(range, db, cursor, val $(,$arg)*)
+      }
+    }
+  };
+}
+
+
 macro_rules! range_to {
   ($range:ident, $db:ident, $cursor:ident, $val:ident, $gt:tt) => {{
     let tx = $db.tx();
@@ -81,7 +104,7 @@ macro_rules! range_to {
 }
 
 macro_rules! range_from {
-  ($range:ident, $db:ident, $cursor:ident, $val:ident) => {{
+  ($range:ident, $db:ident, $cursor:ident, $val:ident, $first:ident, $next:ident) => {{
     let tx = $db.tx();
     let start = $range.start.to_as_ref();
     let mut key: MDBX_val = unsafe { MaybeUninit::uninit().assume_init() };
@@ -93,13 +116,15 @@ macro_rules! range_from {
       }
       if $val.iov_base.is_null() {
         key = val!(start);
-        rt!(OP::MDBX_SET_LOWERBOUND)
+        rt!(OP::$first)
       } else {
-        rt!(OP::MDBX_NEXT)
+        rt!(OP::$next)
       }
     })
   }};
 }
+
+db_range!(RangeFrom, range_from, MDBX_SET_LOWERBOUND, MDBX_NEXT);
 
 macro_rules! range_range_inclusive {
   ($range:ident, $db:ident, $cursor:ident, $val:ident, $gt:tt, $lt:tt) => {{
@@ -148,31 +173,10 @@ macro_rules! range_range_inclusive {
   }};
 }
 
-macro_rules! db_range {
-  ($range:ident,$impl:ident) => {
-    db_range!($range,$impl,);
-  };
-  ($range:ident,$impl:ident, $($arg:tt),*) => {
-    impl<'a, Kind, K: FromMdbx, V: FromMdbx, T: ToAsRef<K, RK>, RK: AsRef<[u8]>> IntoIterator
-      for DbRange<'a, Kind, $range<T>, K, V, T, RK>
-    {
-      type Item = (K, V);
-      type IntoIter = impl std::iter::Iterator<Item = (K, V)>;
-      fn into_iter(self) -> <Self as IntoIterator>::IntoIter {
-        let db = self.0;
-
-        let cursor = db.cursor().unwrap();
-        let mut val = mdbx_val_empty();
-        let range = self.1.0;
-        $impl!(range, db, cursor, val $(,$arg)*)
-      }
-    }
-  };
-}
-
 db_range!(Range,range_range_inclusive,>=,<=);
 db_range!(RangeInclusive,range_range_inclusive,>,<);
-db_range!(RangeFrom, range_from);
+
+
 db_range!(RangeTo,range_to,>=);
 db_range!(RangeToInclusive,range_to,>);
 

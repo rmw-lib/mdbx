@@ -86,26 +86,14 @@ fn main() -> Result<()> {
     test.set(9, 7)?;
     test.set(9, 1)?;
     test.set(0, 0)?;
-    println!("-- range 1..3");
-    for i in test.range(1..3) {
-      println!("{:?}", i);
-    }
-    println!("-- range 3..1");
-    for i in test.range(3..1) {
-      println!("{:?}", i);
-    }
-    println!("-- range 9..7");
-    for i in test.range(9..7) {
-      println!("{:?}", i);
-    }
-    println!("-- range 10..7");
-    for i in test.range(10..7) {
-      println!("{:?}", i);
-    }
-    println!("-- range 10..1");
-    for i in test.range(10..1) {
-      println!("{:?}", i);
-    }
+    range!(test, 1..3);
+    range!(test, 1..=3);
+    range!(test, 3..=2);
+    range!(test, 3..);
+    range!(test, 9..);
+    range!(test, 10..);
+    range!(test, ..3);
+    range!(test, ..=3);
   }
   Ok(())
 }
