@@ -38,7 +38,7 @@ fn main() -> Result<()> {
     // 读取
     match r!(Test1).get([2,3])? {
       Some(r)=>{
-        dbg!(r);
+        println!("u16::from_le_bytes({:?}) = {}", r, u16::from_le_bytes((*r).try_into()?));
       }
       None => unreachable!()
     }
