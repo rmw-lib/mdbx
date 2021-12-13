@@ -1,5 +1,4 @@
 use anyhow::Result;
-use lazy_static::lazy_static;
 use mdbx::prelude::*;
 
 env_rw!(MDBX, {

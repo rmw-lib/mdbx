@@ -4,9 +4,10 @@ macro_rules! env_rw {
     env_rw!($env, $into, r, w);
   };
   ($env:ident, $into:expr,$r:ident, $w:ident) => {
-    lazy_static! {
+    lazy_static::lazy_static! {
       pub static ref $env: Env = $into;
     }
+
     #[macro_export]
     macro_rules! $w {
       () => {
