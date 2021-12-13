@@ -51,6 +51,13 @@
 
 ## 使用示例
 
+### 如何运行示例
+
+首先克隆代码库 `git clone git@github.com:rmw-lib/mdbx.git --depth=1 && cd mdbx`
+
+然后运行 `cargo run --example 01` ，就运行了 `examples/01.rs`
+
+
 ### 写和读 : set & get
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
@@ -158,13 +165,6 @@ mdbx! {
 }
 
 fn main() -> Result<()> {
-  unsafe {
-    println!(
-      "mdbx version https://github.com/erthink/libmdbx/releases/tag/v{}.{}.{}",
-      mdbx_version.major, mdbx_version.minor, mdbx_version.release
-    );
-  }
-
   {
     // 快捷写入
     w!(Test1).set([2, 3], [4, 5])?;

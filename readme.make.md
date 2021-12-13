@@ -96,7 +96,7 @@ use lazy_static::lazy_static;
 
 ### 遍历
 
-我们来看第二个例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) :
+我们来看第二个例子 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) :
 
 ```rust
 #include examples/02.rs
