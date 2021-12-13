@@ -45,7 +45,7 @@
 ![](https://raw.githubusercontent.com/wiki/erthink/libmdbx/img/perf-slide-4.png)
 ![](https://raw.githubusercontent.com/wiki/erthink/libmdbx/img/perf-slide-5.png)
 
-与此同时，[mdbx 改进了不少 lmdb 的缺憾](https://github.com/erthink/libmdbx#improvements-beyond-lmdb)，因此 Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。[^erigon]
+与此同时，[mdbx 改进了不少 lmdb 的缺憾](https://github.com/erthink/libmdbx#improvements-beyond-lmdb)，因此 Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX [^erigon] 。
 
 ## 基础示例
 
@@ -120,6 +120,7 @@ https://github.com/erthink/libmdbx#limitations
 - 最小 0，最大≈½页大小（默认 4K 页键最大大小为 2022 字节）。
 
 
+## 引用说明
 
 [^erigon]: [Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。](https://github.com/ledgerwatch/erigon/wiki/Criteria-for-transitioning-from-Alpha-to-Beta#switch-from-lmdb-to-mdbx)
 
