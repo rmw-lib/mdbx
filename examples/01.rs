@@ -30,13 +30,11 @@ fn main() -> Result<()> {
     );
   }
 
-  // 支持多线程并发读写
-
+  // 多线程并发读写
   let t = std::thread::spawn(|| {
     let tx = w!();
     let test1 = tx | Test1;
     test1.set([5],[6])?;
-    println!("test1.set");
     Ok(())
   });
 
