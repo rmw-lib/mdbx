@@ -57,13 +57,10 @@ macro_rules! cursor_get {
   }};
 }
 
-macro_rules! db_range {
-  ($range:ident,$impl:ident) => {
-    db_range!($range,$impl,);
-  };
-  ($range:ident,$impl:ident, $($arg:tt),*) => {
+macro_rules! _db_range {
+  ($cls:ident,$range:tt,$impl:tt, $($arg:tt),*) => {
     impl<'a, Kind, K: FromMdbx, V: FromMdbx, T: ToAsRef<K, RK>, RK: AsRef<[u8]>> IntoIterator
-      for DbRange<'a, Kind, $range<T>, K, V, T, RK>
+      for $cls<'a, Kind, $range<T>, K, V, T, RK>
     {
       type Item = (K, V);
       type IntoIter = impl std::iter::Iterator<Item = (K, V)>;
@@ -79,8 +76,20 @@ macro_rules! db_range {
   };
 }
 
+macro_rules! db_range {
+  ($($arg:tt),*) => {
+    _db_range!(DbRange, $($arg), *);
+  }
+}
+
+macro_rules! db_range_rev {
+  ($($arg:tt),*) => {
+    _db_range!(DbRangeRev, $($arg), *);
+  }
+}
+
 macro_rules! range_to {
-  ($range:ident, $db:ident, $cursor:ident, $val:ident, $gt:tt) => {{
+  ($range:ident, $db:ident, $cursor:ident, $val:ident, $first:ident, $next:ident, $gt:tt) => {{
     let tx = $db.tx();
     let end = $range.end.to_as_ref();
     let dbi = $db.dbi();
@@ -88,9 +97,9 @@ macro_rules! range_to {
     from_fn(move || {
       cursor_get!($cursor,key,$val,
         if $val.iov_base.is_null() {
-          OP::MDBX_FIRST
+          OP::$first
         } else {
-          OP::MDBX_NEXT
+          OP::$next
         },{
         if ( unsafe { mdbx_cmp(tx, dbi, &mut key, &val!(end)) } $gt 0 ){
           None
@@ -101,6 +110,11 @@ macro_rules! range_to {
     })
   }};
 }
+
+db_range!(RangeTo,range_to,MDBX_FIRST,MDBX_NEXT,>=);
+db_range!(RangeToInclusive,range_to,MDBX_FIRST,MDBX_NEXT,>);
+db_range_rev!(RangeTo,range_to,MDBX_LAST,MDBX_PREV,<=);
+db_range_rev!(RangeToInclusive,range_to,MDBX_LAST,MDBX_PREV,<);
 
 macro_rules! range_from {
   ($range:ident, $db:ident, $cursor:ident, $val:ident, $first:ident, $next:ident) => {{
@@ -124,6 +138,7 @@ macro_rules! range_from {
 }
 
 db_range!(RangeFrom, range_from, MDBX_SET_LOWERBOUND, MDBX_NEXT);
+db_range_rev!(RangeFrom, range_from, MDBX_SET_UPPERBOUND, MDBX_PREV);
 
 macro_rules! range_range_inclusive {
   ($range:ident, $db:ident, $cursor:ident, $val:ident, $gt:tt, $lt:tt) => {{
@@ -176,8 +191,6 @@ macro_rules! range_range_inclusive {
 db_range!(Range,range_range_inclusive,>=,<=);
 db_range!(RangeInclusive,range_range_inclusive,>,<);
 
-db_range!(RangeTo,range_to,>=);
-db_range!(RangeToInclusive,range_to,>);
 
 macro_rules! cls {
   ($fn:ident, $cls:ident) => {

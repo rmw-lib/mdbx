@@ -24,6 +24,15 @@ mdbx! {
     val u64
 }
 
+macro_rules! range_rev {
+  ($var:ident, $range:expr) => {
+    println!("\n-- {} rev_range {:?}", stringify!($var), $range);
+    for i in $var.range_rev($range) {
+      println!("{:?}", i);
+    }
+  };
+}
+
 macro_rules! range {
   ($var:ident, $range:expr) => {
     println!("\n-- {} range {:?}", stringify!($var), $range);
@@ -39,6 +48,41 @@ fn main() -> Result<()> {
       "mdbx version https://github.com/erthink/libmdbx/releases/tag/v{}.{}.{}",
       mdbx_version.major, mdbx_version.minor, mdbx_version.release
     );
+  }
+
+  {
+    println!("\n### Test2");
+    let tx = &MDBX.w()?;
+    let test2 = tx | Test2;
+    test2.set(2, 9)?;
+    test2.set(1, 2)?;
+    test2.set(2, 4)?;
+    test2.set(1, 5)?;
+    test2.set(9, 7)?;
+    test2.set(9, 1)?;
+    test2.set(0, 0)?;
+
+    println!("-- test2 all");
+    for i in test2 {
+      println!("{:?}", i);
+    }
+
+    range!(test2, 1..3);
+    range!(test2, 1..2);
+    range!(test2, 1..=2);
+    range!(test2, 1..=3);
+    range!(test2, 3..1);
+    range!(test2, 3..=2);
+    range!(test2, 3..);
+    range!(test2, 9..);
+    range!(test2, 10..);
+    range!(test2, 10..1);
+    range!(test2, 10..7);
+    range!(test2, 9..1);
+    range!(test2, ..3);
+    range!(test2, ..=3);
+    range_rev!(test2, 3..);
+    range_rev!(test2, 2..);
   }
 
   {
@@ -66,6 +110,8 @@ fn main() -> Result<()> {
       println!("{:?}", i);
     }
     range!(test, 1..3);
+    range!(test, 1..2);
+    range!(test, 1..=2);
     range!(test, 1..=3);
     range!(test, 3..1);
     range!(test, 3..=2);
@@ -77,36 +123,9 @@ fn main() -> Result<()> {
     range!(test, 9..1);
     range!(test, ..3);
     range!(test, ..=3);
-  }
-  {
-    println!("\n### Test2");
-    let tx = &MDBX.w()?;
-    let test2 = tx | Test2;
-    test2.set(2, 9)?;
-    test2.set(1, 2)?;
-    test2.set(2, 4)?;
-    test2.set(1, 5)?;
-    test2.set(9, 7)?;
-    test2.set(9, 1)?;
-    test2.set(0, 0)?;
-
-    println!("-- test2 all");
-    for i in test2 {
-      println!("{:?}", i);
-    }
-
-    range!(test2, 1..3);
-    range!(test2, 1..=3);
-    range!(test2, 3..1);
-    range!(test2, 3..=2);
-    range!(test2, 3..);
-    range!(test2, 9..);
-    range!(test2, 10..);
-    range!(test2, 10..1);
-    range!(test2, 10..7);
-    range!(test2, 9..1);
-    range!(test2, ..3);
-    range!(test2, ..=3);
+    range_rev!(test, ..3);
+    range_rev!(test, ..=3);
+    range_rev!(test, 3..);
   }
   Ok(())
 }
