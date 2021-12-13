@@ -121,9 +121,6 @@ https://github.com/erthink/libmdbx#limitations
 
 
 
----
-
-
 [^erigon]: [Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。](https://github.com/ledgerwatch/erigon/wiki/Criteria-for-transitioning-from-Alpha-to-Beta#switch-from-lmdb-to-mdbx)
 
     他们列举了从 LMDB 过渡到 MDBX 的好处：
