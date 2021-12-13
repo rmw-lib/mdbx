@@ -1,0 +1,19 @@
+   Compiling mdbx v0.0.2 (/Users/z/rmw/mdbx)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.86s
+     Running `target/debug/examples/02`
+mdbx file path /Users/z/rmw/mdbx/target/debug/examples/02.mdb
+mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.2
+
+u16::from_le_bytes(Bin([4, 5])) = 1284
+
+-- loop test1 rev
+Bin([2]) = Bin([3])
+Bin([2, 3]) = Bin([4, 5])
+Bin([8]) = Bin([9])
+Bin([9]) = Bin([10, 12])
+
+get after del Ok(None)
+
+-- loop test2
+Bin([114, 109, 119, 46, 108, 105, 110, 107]) = Bin([68, 111, 119, 110, 32, 119, 105, 116, 104, 32, 68, 97, 116, 97, 32, 72, 101, 103, 101, 109, 111, 110, 121])
+Bin([97]) = Bin([98])
