@@ -1,6 +1,3 @@
-   Compiling mdbx v0.0.2 (/Users/z/rmw/mdbx)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.86s
-     Running `target/debug/examples/02`
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/02.mdb
 mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.2
 
