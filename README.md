@@ -86,13 +86,11 @@ fn main() -> Result<()> {
     );
   }
 
-  // 支持多线程并发读写
-
+  // 多线程并发读写
   let t = std::thread::spawn(|| {
     let tx = w!();
     let test1 = tx | Test1;
     test1.set([5],[6])?;
-    println!("test1.set");
     Ok(())
   });
 
@@ -123,7 +121,7 @@ fn main() -> Result<()> {
     test1.set([8],&[9])?;
 
     println!("\n-- loop test1 rev");
-    for (k,v) in test1.rev() {
+    for (k,v) in test1 {
       println!("{:?} = {:?}",k,v);
     }
 
@@ -135,7 +133,7 @@ fn main() -> Result<()> {
     test2.set(&"a",&"b")?;
 
     println!("\n-- loop test2");
-    for (k,v) in test2 {
+    for (k,v) in test2.rev() {
       println!("{:?} = {:?}",k,v);
     }
 
@@ -155,7 +153,6 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/main.mdb
 mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.2
 
 u16::from_le_bytes(Bin([4, 5])) = 1284
-test1.set
 
 -- loop test1 rev
 Bin([9]) = Bin([10, 12])
