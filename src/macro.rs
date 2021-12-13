@@ -1,6 +1,9 @@
 #[macro_export]
 macro_rules! env_rw {
-  ($env:ident, $r:ident, $w:ident) => {
+  ($env:ident, $into:expr,$r:ident, $w:ident) => {
+    lazy_static! {
+      pub static ref $env: Env = $into;
+    }
     #[macro_export]
     macro_rules! $w {
       () => {

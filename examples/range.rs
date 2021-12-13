@@ -1,17 +1,18 @@
-#![allow(non_upper_case_globals)]
-
 use anyhow::Result;
 use lazy_static::lazy_static;
 use mdbx::prelude::*;
 
-lazy_static! {
-  pub static ref MDBX: Env = {
+env_rw!(
+  MDBX,
+  {
     let mut db_path = std::env::current_exe().unwrap();
     db_path.set_extension("mdb");
     println!("mdbx file path {}", db_path.display());
     db_path.into()
-  };
-}
+  },
+  r,
+  w
+);
 
 mdbx! {
   MDBX // 数据库ENV的变量名
