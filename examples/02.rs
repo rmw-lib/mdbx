@@ -20,13 +20,6 @@ mdbx! {
 }
 
 fn main() -> Result<()> {
-  unsafe {
-    println!(
-      "mdbx version https://github.com/erthink/libmdbx/releases/tag/v{}.{}.{}",
-      mdbx_version.major, mdbx_version.minor, mdbx_version.release
-    );
-  }
-
   {
     // 快捷写入
     w!(Test1).set([2, 3], [4, 5])?;
