@@ -47,9 +47,7 @@
 ![](https://raw.githubusercontent.com/wiki/erthink/libmdbx/img/perf-slide-4.png)
 ![](https://raw.githubusercontent.com/wiki/erthink/libmdbx/img/perf-slide-5.png)
 
-[mdbx 改进了不少 lmdb 的缺憾](https://github.com/erthink/libmdbx#improvements-beyond-lmdb)。
-
-Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。[^erigon]
+与此同时，[mdbx 改进了不少 lmdb 的缺憾](https://github.com/erthink/libmdbx#improvements-beyond-lmdb)，因此 Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。[^erigon]
 
 ## 基础示例
 
