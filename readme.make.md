@@ -58,18 +58,48 @@ mdbx在嵌入式性能测试基准[ioarena](https://github.com/pmwkaa/ioarena)�
 
 
 
+## 数据库标志
+
+[mdbx db flag list](https://erthink.github.io/libmdbx/group__c__dbi.html#gafe3bddb297b3ab0d828a487c5726f76a)
+
+MDBX_REVERSEKEY 对键使用反向字符串比较。（当使用小端编码数字作为键的时候很有用）
+
+MDBX_DUPSORT 使用排序的重复项，即允许一个键有多个值。
+
+MDBX_INTEGERKEY 本机字节顺序的数字键 uint32_t 或 uint64_t。键的大小必须相同，并且在作为参数传递时必须对齐。
+
+MDBX_DUPFIXED 使用MDBX_DUPSORT的情况下，数据值的大小必须相同（可以快速统计值的个数）。
+
+MDBX_INTEGERDUP 需使用MDBX_DUPSORT和MDBX_DUPFIXED；值是整数（类似MDBX_INTEGERKEY）。数据值必须全部具有相同的大小，并且在作为参数传递时必须对齐。
+
+MDBX_REVERSEDUP 使用MDBX_DUPSORT；对数据值使用反向字符串比较。
+
+MDBX_CREATE 如果不存在，则创建 DB。
+
+MDBX_DB_ACCEDE
+
+打开使用未知标志创建的现有子数据库。
+该MDBX_DB_ACCEDE标志旨在打开使用未知标志（MDBX_REVERSEKEY、MDBX_DUPSORT、MDBX_INTEGERKEY、MDBX_DUPFIXED、MDBX_INTEGERDUP和MDBX_REVERSEDUP）创建的现有子数据库。
+在这种情况下，子数据库不会返回MDBX_INCOMPATIBLE错误，而是使用创建它的标志打开，然后应用程序可以通过mdbx_dbi_flags()确定实际标志。
 
 
 
-
-## 支持多个不同值 DUPSORT
-
+## 一个键对应多个值 DUPSORT
 
 
-## 数据库最大个数
+
+## 注意事项
+
+### 数据库最大个数
 
 maxdbs 打开数据的时可以更新原有设置。
 一开始可以设置小一点的值，有需要再加大。
+
+https://github.com/erthink/libmdbx#limitations
+
+### 键的长度
+
+- 最小0，最大≈½页大小（默认4K页键最大大小为2022字节）。
 
 ## use example
 
