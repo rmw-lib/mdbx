@@ -43,7 +43,7 @@ mdbx 在嵌入式性能测试基准 [ioarena](https://github.com/pmwkaa/ioarena)
 
 Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。[^erigon]
 
-## 使用教程
+## 基础示例
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
 
@@ -57,18 +57,25 @@ Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。[^erig
 #include examples/01.out
 ```
 
+### 数据库环境
+
+### 线程与事务
+
+同一线程同一时间只能启用一个事务。
+
 ## 数据类型
 
 ### 预置数据类型
 
 ### 自定义数据类型
 
+## 一个键对应多个值
+
+## 删除一个精确匹配的键值对
+
+## 迭代器
 
 ## 数据库标志
-
-### DUPSORT : 一个键对应多个值
-
-### 其他数据库标志
 
 [mdbx db flag list](https://erthink.github.io/libmdbx/group__c__dbi.html#gafe3bddb297b3ab0d828a487c5726f76a)
 
@@ -95,7 +102,7 @@ MDBX_DB_ACCEDE
 ### 默认自动生成的数据库标志
 
 
-## 全局设置
+## 数据库环境全局设置
 
 ### 数据库最大个数
 
