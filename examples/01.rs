@@ -65,7 +65,7 @@ fn main() -> Result<()> {
     test1.set([8],&[9])?;
 
     println!("\n-- loop test1 rev");
-    for (k,v) in test1.rev() {
+    for (k,v) in test1 {
       println!("{:?} = {:?}",k,v);
     }
 
@@ -77,7 +77,7 @@ fn main() -> Result<()> {
     test2.set(&"a",&"b")?;
 
     println!("\n-- loop test2");
-    for (k,v) in test2 {
+    for (k,v) in test2.rev() {
       println!("{:?} = {:?}",k,v);
     }
 
