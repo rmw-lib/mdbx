@@ -1,6 +1,6 @@
 #![allow(non_upper_case_globals)]
 
-use anyhow::Result;
+use anyhow::{Result,Ok};
 use lazy_static::lazy_static;
 use mdbx::prelude::*;
 
@@ -35,7 +35,7 @@ fn main() -> Result<()> {
     let test1 = tx | Test1;
     test1.set([5],[6])?;
     println!("test1.set");
-    Ok::<_,anyhow::Error>(())
+    Ok(())
   });
 
   {
