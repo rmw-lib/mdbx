@@ -95,7 +95,7 @@ macro_rules! Db {
     $val:ty,
     $flag:expr
   ) => {
-    lazy_static! {
+    lazy_static::lazy_static! {
       #[allow(non_upper_case_globals)]
       pub static ref $name: $crate::db::Config<
         'static,
