@@ -86,6 +86,8 @@ fn main() -> Result<()> {
     );
   }
 
+  // 支持多线程并发读写
+
   let t = std::thread::spawn(|| {
     let tx = w!();
     let test1 = tx | Test1;
