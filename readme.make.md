@@ -49,6 +49,13 @@
 
 ## 使用示例
 
+### 如何运行示例
+
+首先克隆代码库 `git clone git@github.com:rmw-lib/mdbx.git --depth=1 && cd mdbx`
+
+然后运行 `cargo run --example 01` ，就运行了 `examples/01.rs`
+
+
 ### 写和读 : set & get
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
