@@ -38,7 +38,7 @@ fn main() -> Result<()> {
     // 读取
     match r!(Test1).get([2,3])? {
       Some(r)=>{
-        println!("u16::from_le_bytes({:?}) = {}", r, u16::from_le_bytes((*r).try_into()?));
+        println!("\nu16::from_le_bytes({:?}) = {}", r, u16::from_le_bytes((*r).try_into()?));
       }
       None => unreachable!()
     }
@@ -55,16 +55,19 @@ fn main() -> Result<()> {
     test1.set(&[2],&[3])?;
     test1.set([8],&[9])?;
 
-    for (k,v) in test1 {
+    println!("\n-- loop test1 rev");
+    for (k,v) in test1.rev() {
       println!("{:?} = {:?}",k,v);
     }
 
     test1.del([8])?;
 
-    println!("get after del {:?}", test1.get([8]));
+    println!("\nget after del {:?}", test1.get([8]));
 
-    test2.set("rmw.link","Down with Data Hegemony · Cyberland Revolution")?;
+    test2.set("rmw.link","Down with Data Hegemony")?;
+    test2.set(&"a",&"b")?;
 
+    println!("\n-- loop test2");
     for (k,v) in test2 {
       println!("{:?} = {:?}",k,v);
     }

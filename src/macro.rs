@@ -1,27 +1,26 @@
-
 #[macro_export]
 macro_rules! env_rw {
   ($env:ident, $r:ident, $w:ident) => {
     #[macro_export]
     macro_rules! $w {
-      ()=>{
+      () => {
         &$env.w()?
       };
-      ($db:ident)=>{
+      ($db:ident) => {
         $w!() | $db
-      }
+      };
     }
 
     #[macro_export]
     macro_rules! $r {
-      ()=>{
+      () => {
         &$env.r()?
       };
-      ($db:ident)=>{
+      ($db:ident) => {
         $r!() | $db
-      }
+      };
     }
-  }
+  };
 }
 
 #[macro_export]
