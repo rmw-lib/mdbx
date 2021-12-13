@@ -92,6 +92,8 @@ fn main() -> Result<()> {
     range!(test, 3..);
     range!(test, 9..);
     range!(test, 10..);
+    range!(test, 10..1);
+    range!(test, 9..1);
     range!(test, ..3);
     range!(test, ..=3);
   }
