@@ -16,7 +16,7 @@
 
 ## libmdbx 是什么？
 
-[mdbx](https://github.com/erthink/libmdbx)是基于lmdb魔改的数据库 ，作者是俄罗斯人[Леонид Юрьев (Leonid Yuriev)](https://vk.com/erthink)。
+[mdbx](https://github.com/erthink/libmdbx)是基于lmdb二次开发的数据库 ，作者是俄罗斯人[Леонид Юрьев (Leonid Yuriev)](https://vk.com/erthink)。
 
 [lmdb](https://en.wikipedia.org/wiki/Lightning_Memory-Mapped_Database)是一个超级快的嵌入式键值数据库。
 

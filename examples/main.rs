@@ -13,6 +13,9 @@ lazy_static! {
     dir.into()
   };
 }
+
+env_rw!(MDBX,r,w);
+
 mdbx! {
   MDBX // 数据库ENV的变量名
   Test // 数据库
@@ -34,10 +37,12 @@ fn main() -> Result<()> {
 
   {
     println!("\n### Test2");
-    //(&MDBX.w()?|  Test).set(111,2)?;
-    dbg!((&MDBX.r()?|  Test).get(111)?);
 
-  }
+    w!(Test).set(111,3)?;
+    dbg!(r!(Test).get(111)?);
+
+    //(&MDBX.w()?|  Test).set(111,2)?;
+ }
 
   Ok(())
 }

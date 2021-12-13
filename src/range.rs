@@ -191,7 +191,6 @@ macro_rules! range_range_inclusive {
 db_range!(Range,range_range_inclusive,>=,<=);
 db_range!(RangeInclusive,range_range_inclusive,>,<);
 
-
 macro_rules! cls {
   ($fn:ident, $cls:ident) => {
     pub struct $cls<'a, Kind, Range, K: FromMdbx, V: FromMdbx, T: ToAsRef<K, RK>, RK: AsRef<[u8]>>(
