@@ -81,7 +81,6 @@ fn main() -> Result<()> {
   {
     println!("\n### Test2");
     let tx = &MDBX.w()?;
-
     let test2 = tx | Test2;
     test2.set(2, 9)?;
     test2.set(1, 2)?;
@@ -90,6 +89,12 @@ fn main() -> Result<()> {
     test2.set(9, 7)?;
     test2.set(9, 1)?;
     test2.set(0, 0)?;
+
+    println!("-- test2 all");
+    for i in test2 {
+      println!("{:?}", i);
+    }
+
     range!(test2, 1..3);
     range!(test2, 1..=3);
     range!(test2, 3..1);

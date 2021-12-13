@@ -136,38 +136,39 @@ macro_rules! range_range_inclusive {
     #[allow(invalid_value)]
     let mut next: OP = unsafe { MaybeUninit::uninit().assume_init() };
 
-    macro_rules! rt {
-        ($op:expr) => {{
-          cursor_get!($cursor, key, $val, $op, {
-            let cmp = unsafe { mdbx_cmp(tx, dbi, &mut key, &val!(end)) };
-            return if {
-              if next == OP::MDBX_NEXT {
-                cmp $gt 0
-              } else {
-                cmp $lt 0
-              }
-            } {
-              None
-            } else {
-              Some(item_kv!(tx, key, $val))
-            }
-          })
-        }};
-      }
 
     from_fn(move || {
-      if $val.iov_base.is_null() {
-        key = val!(start);
-        rt!(if unsafe { mdbx_cmp(tx, dbi, &key, &val!(end)) } <= 0 {
-          next = OP::MDBX_NEXT;
-          OP::MDBX_SET_LOWERBOUND
+      cursor_get!(
+        $cursor,
+        key,
+        $val,
+        if $val.iov_base.is_null() {
+          key = val!(start);
+          if unsafe { mdbx_cmp(tx, dbi, &key, &val!(end)) } <= 0 {
+            next = OP::MDBX_NEXT;
+            OP::MDBX_SET_LOWERBOUND
+          } else {
+            next = OP::MDBX_PREV;
+            OP::MDBX_SET_UPPERBOUND
+          }
         } else {
-          next = OP::MDBX_PREV;
-          OP::MDBX_SET_UPPERBOUND
-        })
-      } else {
-        rt!(next)
-      }
+          next
+        },
+        {
+          let cmp = unsafe { mdbx_cmp(tx, dbi, &mut key, &val!(end)) };
+          return if {
+            if next == OP::MDBX_NEXT {
+              cmp $gt 0
+            } else {
+              cmp $lt 0
+            }
+          } {
+            None
+          } else {
+            Some(item_kv!(tx, key, $val))
+          }
+        }
+     )
     })
   }};
 }
