@@ -67,10 +67,14 @@ fn main() -> Result<()> {
     }
     range!(test, 1..3);
     range!(test, 1..=3);
+    range!(test, 3..1);
     range!(test, 3..=2);
     range!(test, 3..);
     range!(test, 9..);
     range!(test, 10..);
+    range!(test, 10..1);
+    range!(test, 10..7);
+    range!(test, 9..1);
     range!(test, ..3);
     range!(test, ..=3);
   }
@@ -88,6 +92,7 @@ fn main() -> Result<()> {
     test.set(0, 0)?;
     range!(test, 1..3);
     range!(test, 1..=3);
+    range!(test, 3..1);
     range!(test, 3..=2);
     range!(test, 3..);
     range!(test, 9..);
