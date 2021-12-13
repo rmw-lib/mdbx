@@ -59,9 +59,16 @@ Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。[^erig
 
 ## 数据类型
 
-## 自定义数据类型
+### 预置数据类型
+
+### 自定义数据类型
+
 
 ## 数据库标志
+
+### DUPSORT : 一个键对应多个值
+
+### 其他数据库标志
 
 [mdbx db flag list](https://erthink.github.io/libmdbx/group__c__dbi.html#gafe3bddb297b3ab0d828a487c5726f76a)
 
@@ -85,9 +92,10 @@ MDBX_DB_ACCEDE
 该 MDBX_DB_ACCEDE 标志旨在打开使用未知标志（MDBX_REVERSEKEY、MDBX_DUPSORT、MDBX_INTEGERKEY、MDBX_DUPFIXED、MDBX_INTEGERDUP 和 MDBX_REVERSEDUP）创建的现有子数据库。
 在这种情况下，子数据库不会返回 MDBX_INCOMPATIBLE 错误，而是使用创建它的标志打开，然后应用程序可以通过 mdbx_dbi_flags()确定实际标志。
 
-## 一个键对应多个值 DUPSORT
+### 默认自动生成的数据库标志
 
-## 注意事项
+
+## 全局设置
 
 ### 数据库最大个数
 
