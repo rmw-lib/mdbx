@@ -12,17 +12,17 @@
 
 ## 引子
 
-在写『[人民网络](https://rmw.link)』，感觉自己需要一个嵌入式数据库。
+在写『[人民网络](https://rmw.link)』的时候，感觉自己需要一个嵌入式数据库。
 
-是因为会涉及到一些网络吞吐的记录，读写频繁，`sqlite3` 还是太高级性能堪忧。
+因为会涉及到一些网络吞吐的记录，读写频繁，`sqlite3` 还是太高级性能堪忧。
 
-所以用更底层的键值数据库更为合适（[`lmdb` 比 `sqlite` 快 10 倍](https://discourse.world/h/2020/06/05/Shine-and-poverty-key-value-database-LMDB-in-applications-for-iOS)）。
+所以用更底层的键值数据库更为合适（[lmdb 比 sqlite 快 10 倍](https://discourse.world/h/2020/06/05/Shine-and-poverty-key-value-database-LMDB-in-applications-for-iOS)）。
 
 ![](https://raw.githubusercontent.com/gcxfd/img/gh-pages/yxZV8x.jpg)
 
 最终，我选择了 `lmdb` 的魔改版 —— `mdbx` 。
 
-但现在 `mdbx` 的 `rust` 封装 [mdbx-rs(mdbx-sys)不支持 windows](https://github.com/vorot93/mdbx-rs/issues/1)，于是我自己动手封装一个支持 windows 的版本。
+但是，现在 `mdbx` 的 `rust` 封装 [mdbx-rs(mdbx-sys)不支持 windows](https://github.com/vorot93/mdbx-rs/issues/1)，于是我自己动手封装一个支持 windows 的版本。
 
 我在易用性上做了大量工作。比如，可以一个模块中用 `lazy_static` 定义好所有数据库，然后用 `use` 引入，并且支持多线程访问。
 
@@ -60,6 +60,27 @@
 ```
 #include examples/01.out
 ```
+
+### 代码解读
+
+#### anyhow 和 lazy_static
+
+```
+use anyhow::{Ok, Result};
+use lazy_static::lazy_static;
+```
+
+[anyhow](https://rustmagazine.github.io/rust_magazine_2021/chapter_2/rust_error_handle.html#thiserror--anyhow) 是 rust 的错误处理库。
+
+[lazy_static](https://juejin.cn/post/7007336922817232927) 是延迟初始化的静态变量。
+
+这两个库很常见，我不赘言。
+
+#### pub static ref MDBX: Env
+
+
+
+
 
 ### 数据库环境
 
