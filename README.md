@@ -232,9 +232,6 @@ https://github.com/erthink/libmdbx#limitations
 
 
 
----
-
-
 [^erigon]: [Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。](https://github.com/ledgerwatch/erigon/wiki/Criteria-for-transitioning-from-Alpha-to-Beta#switch-from-lmdb-to-mdbx)
 
     他们列举了从 LMDB 过渡到 MDBX 的好处：
@@ -248,7 +245,7 @@ https://github.com/erthink/libmdbx#limitations
     > 2. MDBX 对事务处理的并发使用有更严格的检查，以及在同一执行线程中的重叠读写事务。这使我们能够发现一些非明显的错误，并使行为更可预测。
     >    在超过 5 年的时间里（自从它从 LMDB 中分离出来），MDBX 积累了大量的安全修复和 heisenbug 修复，据我们所知，这些修复仍然存在于 LMDB 中。其中一些是我们在测试过程中发现的，而 MDBX 的维护者也认真对待，并及时进行了修复。
     >
-    > 3. 当涉及到不断修改数据的数据库时，它们会产生相当多的可回收空间（在 LMDB 术语中也被称为 "freelist"）。我们不得不给 LMDB 打上补丁，以修复在处理可回收空间时最严重的缺点（这里的分析：[https://github.com/ledgerwatch/erigon/wiki/LMDB-freelist-illustrated-guide）。MDBX 对可回收空间的有效处理进行了特别的关注，到目前为止，还不需要打补丁。](https://github.com/ledgerwatch/erigon/wiki/LMDB-freelist-illustrated-guide%EF%BC%89%E3%80%82MDBX%E5%AF%B9%E5%8F%AF%E5%9B%9E%E6%94%B6%E7%A9%BA%E9%97%B4%E7%9A%84%E6%9C%89%E6%95%88%E5%A4%84%E7%90%86%E8%BF%9B%E8%A1%8C%E4%BA%86%E7%89%B9%E5%88%AB%E7%9A%84%E5%85%B3%E6%B3%A8%EF%BC%8C%E5%88%B0%E7%9B%AE%E5%89%8D%E4%B8%BA%E6%AD%A2%EF%BC%8C%E8%BF%98%E4%B8%8D%E9%9C%80%E8%A6%81%E6%89%93%E8%A1%A5%E4%B8%81%E3%80%82)
+    > 3. 当涉及到不断修改数据的数据库时，它们会产生相当多的可回收空间（在 LMDB 术语中也被称为 "freelist"）。我们不得不给 LMDB 打上补丁，以修复在处理可回收空间时最严重的缺点 [（分析）](https://github.com/ledgerwatch/erigon/wiki/LMDB-freelist-illustrated-guide) 。[MDBX 对可回收空间的有效处理进行了特别的关注，到目前为止，还不需要打补丁。](https://github.com/ledgerwatch/erigon/wiki/LMDB-freelist-illustrated-guide%EF%BC%89%E3%80%82MDBX%E5%AF%B9%E5%8F%AF%E5%9B%9E%E6%94%B6%E7%A9%BA%E9%97%B4%E7%9A%84%E6%9C%89%E6%95%88%E5%A4%84%E7%90%86%E8%BF%9B%E8%A1%8C%E4%BA%86%E7%89%B9%E5%88%AB%E7%9A%84%E5%85%B3%E6%B3%A8%EF%BC%8C%E5%88%B0%E7%9B%AE%E5%89%8D%E4%B8%BA%E6%AD%A2%EF%BC%8C%E8%BF%98%E4%B8%8D%E9%9C%80%E8%A6%81%E6%89%93%E8%A1%A5%E4%B8%81%E3%80%82)
     >
     > 4. 根据我们的测试，MDBX 在我们的工作负载上表现得稍微好一些。
     >
