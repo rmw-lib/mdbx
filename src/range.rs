@@ -101,7 +101,7 @@ macro_rules! range_to {
         } else {
           OP::$next
         },{
-        if ( unsafe { mdbx_cmp(tx, dbi, &mut key, &val!(end)) } $gt 0 ){
+        if ( unsafe { mdbx_cmp(tx, dbi, &key, &val!(end)) } $gt 0 ){
           None
         } else {
           Some(item_kv!(tx, key, $val))
@@ -170,7 +170,7 @@ macro_rules! range_range_inclusive {
           next
         },
         {
-          let cmp = unsafe { mdbx_cmp(tx, dbi, &mut key, &val!(end)) };
+          let cmp = unsafe { mdbx_cmp(tx, dbi, &key, &val!(end)) };
           return if {
             if next == OP::MDBX_NEXT {
               cmp $gt 0
