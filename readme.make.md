@@ -47,7 +47,9 @@
 
 与此同时，[mdbx 改进了不少 lmdb 的缺憾](https://github.com/erthink/libmdbx#improvements-beyond-lmdb)，因此 Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX [^erigon] 。
 
-## 基础示例
+## 使用示例
+
+### 写和读 : set & get
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
 
@@ -60,6 +62,7 @@
 ```
 #include examples/01.out
 ```
+
 
 ### 代码解读
 
@@ -76,17 +79,27 @@ use lazy_static::lazy_static;
 
 这两个库很常见，我不赘言。
 
-#### pub static ref MDBX: Env
+#### 数据库环境配置 pub static ref MDBX: Env
 
-
-
-
-
-### 数据库环境
-
-### 线程与事务
+#### 线程与事务
 
 同一线程同一时间只能启用一个事务。
+
+事务会在作用域结束时提交。
+
+### 遍历
+
+我们来看第二个例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) :
+
+```rust
+#include examples/02.rs
+```
+
+运行输出如下
+
+```
+#include examples/02.out
+```
 
 ## 数据类型
 
