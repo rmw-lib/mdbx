@@ -6,13 +6,13 @@ use mdbx::prelude::*;
 
 lazy_static! {
   pub static ref MDBX: Env = {
-    let mut dir = std::env::current_exe().unwrap();
-    dir.pop();
-    dir.push("main.mdb");
-    println!("mdbx file path {}", dir.display());
-    dir.into()
+    let mut db_path = std::env::current_exe().unwrap();
+    db_path.set_extension("mdb");
+    println!("mdbx file path {}", db_path.display());
+    db_path.into()
   };
 }
+
 mdbx! {
   MDBX // 数据库ENV的变量名
   Test // 数据库
