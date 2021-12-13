@@ -6,15 +6,19 @@
 
 因为[mdbx-rs(mdbx-sys)不支持windows](https://github.com/vorot93/mdbx-rs/issues/1)，于是我自己动手封装一个支持windows版本。
 
-可以在一个模块中用`lazy_static`定义好数据库，然后用`use`引入，支持多线程，用起来会很方便。
+我在易用性上做了大量优化。
+
+比如，可以一个模块中用`lazy_static`定义好所有数据库，然后用`use`引入，并且支持多线程访问。
+
+
+
+同时，支持多线程，用起来会很方便。
 
 ## libmdbx 是什么？
 
 [mdbx](https://github.com/erthink/libmdbx)是基于lmdb魔改的数据库 ，作者是俄罗斯人[Леонид Юрьев (Leonid Yuriev)](https://vk.com/erthink)。
 
-lmdb是一个超级快的嵌入式键值数据库，[性能测试对比如下图](http://www.lmdb.tech/bench/inmem/)。
-
-![](http://www.lmdb.tech/bench/inmem/InMem20Mperf.png)
+[lmdb](https://en.wikipedia.org/wiki/Lightning_Memory-Mapped_Database)是一个超级快的嵌入式键值数据库。
 
 全文搜索引擎[MeiliSearch](https://docs.meilisearch.com/reference/under_the_hood/storage.html#measured-disk-usage)就是基于lmdb开发的。
 
@@ -33,49 +37,30 @@ mdbx在嵌入式性能测试基准[ioarena](https://github.com/pmwkaa/ioarena)�
 
 他们列举了从 LMDB 过渡到 MDBX 的好处：
 
-> Erigon started off with the BoltDB database backend, then adding the support for BadgerDB, and then eventually migrating exclusively to LMDB. At some point we have encountered stability issues that were caused by our usage of LMDB that was not envisaged by the creators. We have since then been looking at a well-supported derivative of LMDB, called MDBX, and hoping to use their stability improvement, and potentially working more together in the future. The integration of MDBX is done, now it is time for more testing and documentation.
+> Erigon开始使用BoltDB数据库后端，然后增加了对BadgerDB的支持，最后完全迁移到LMDB。在某些时候，我们遇到了稳定性问题，这些问题是由我们对LMDB的使用引起的，而这些问题是创造者没有预料到的。从那时起，我们一直在关注一个支持良好的LMDB的衍生产品，称为MDBX，并希望使用他们的稳定性改进，并有可能在未来进行更多的合作。MDBX的整合已经完成，现在是时候进行更多的测试和记录了。
 > 
-> Erigon 从 BoltDB 数据库后端开始，然后添加对 BadgerDB 的支持，最终专门迁移到 LMDB。在某种程度上，我们遇到了稳定性问题，这是由于我们使用了创建者没有预料到的 LMDB 而引起的。从那时起，我们一直在研究一种受到良好支持的 LMDB 衍生物，称为 MDBX，并希望利用它们对稳定性的改善，并可能在未来进行更多的合作。MDBX 的集成已经完成，现在是进行更多测试和文档化的时候了。
+> 从LMDB过渡到MDBX的好处：
 > 
-> Benefits of transitioning from LMDB to MDBX:
+> 1. 数据库文件的增长 "空间(geometry)" 工作正常。这一点很重要，尤其是在Windows上。在 LMDB 中，人们必须事先指定一次内存映射大小（目前我们默认使用 2Tb），如果数据库文件的增长超过这个限制，就必须重新启动这个过程。在 Windows 上，将内存映射大小设置为 2Tb 会使数据库文件一开始就有 2Tb 大，这不是很方便。在 MDBX 中，内存映射大小是以 2Gb 为单位递增的。这意味着偶尔的重新映射，但会带来更好的用户体验。
 > 
-> 从 LMDB 过渡到 MDBX 的好处:
+> 2. MDBX对事务处理的并发使用有更严格的检查，以及在同一执行线程中的重叠读写事务。这使我们能够发现一些非明显的错误，并使行为更可预测。
+>    在超过5年的时间里（自从它从LMDB中分离出来），MDBX积累了大量的安全修复和heisenbug修复，据我们所知，这些修复仍然存在于LMDB中。其中一些是我们在测试过程中发现的，而MDBX的维护者也认真对待，并及时进行了修复。
 > 
-> 1.
->     Database file growth "geometry" works properly. This is important especially on Windows. In LMDB, one has to specify the memory map size once in advance (currently we use 2Tb by default), and if the database file grows over that limit, one has to restart the process. On Windows, setting memory map size to 2Tb makes database file 2Tb large on the onset, which is not very convenient. With MDBX, memory map size is increased in 2Gb increments. This means occasional remapping, but results in a better user experience.
+> 3. 当涉及到不断修改数据的数据库时，它们会产生相当多的可回收空间（在LMDB术语中也被称为 "freelist"）。我们不得不给LMDB打上补丁，以修复在处理可回收空间时最严重的缺点（这里的分析：https://github.com/ledgerwatch/erigon/wiki/LMDB-freelist-illustrated-guide）。MDBX对可回收空间的有效处理进行了特别的关注，到目前为止，还不需要打补丁。
 > 
->     数据库文件增长“几何”工程正常。这一点非常重要，尤其是在 Windows 上。在 LMDB 中，必须提前一次指定内存映射大小(目前我们默认使用2tb) ，如果数据库文件超过这个限制，则必须重新启动进程。在 Windows 上，将内存映射大小设置为2tb 会使数据库文件在开始时就变大，这并不十分方便。使用 MDBX，内存映射大小以2gb 的增量增加。这意味着偶尔的重新映射，但是会带来更好的用户体验。
+> 4. 根据我们的测试，MDBX在我们的工作负载上表现得稍微好一些。
 > 
-> 2.
->    MDBX has more strict checks on concurrent use of the transaction handles, as well as overlap read and write transaction within the same thread of execution. This allowed us to find some non-obvious bugs and make behaviour more predictable.
+> 5. MDBX暴露了更多的内部遥测数据 — 更多关于数据库内部发生的指标。而我们在Grafana中拥有这些数据 — 以便在应用设计上做出更好的决定。例如，在完全过渡到MDBX之后（移除对LMDB的支持），我们将实施 "提交半满事务 "策略，以避免溢出/未溢出的磁盘接触。这将进一步简化我们的代码，而不影响性能。
 > 
->    MDBX 对事务句柄的并发使用有更严格的检查，以及在同一执行线程中重叠读写事务。这使我们能够发现一些不明显的错误，并使行为更可预测。
+> 6. MDBX支持 "Exclusive open "模式--我们将其用于数据库迁移，以防止任何其他读者在数据库迁移过程中访问数据库。
 > 
->    Over the period of more than 5 years (since it split from LMDB), MDBX accumulated a lot of safety fixes and heisenbug fixes that are still present in LMDB to the best of our knowledge. Some of them we have discovered during our testing, and MDBX maintainer took them seriously and worked on the fixes promptly.
-> 
->    在超过5年的时间里(从 LMDB 中分离出来以后) ，MDBX 积累了大量的安全修复和 heisenberg bug 修复，据我们所知，这些修复仍然存在于 LMDB 中。我们在测试期间发现了其中的一些问题，MDBX 维护人员认真对待了这些问题，并及时修复了这些问题。
-> 
-> 3.
->    When it comes to databases that constantly modify data, they generate quite a lot of reclaimable space (also known as "freelist" in LMDB terminology). We had to patch LMDB to fix most serious drawbacks when working with reclaimable space (analysis here: https://github.com/ledgerwatch/erigon/wiki/LMDB-freelist-illustrated-guide). MDBX takes special care of efficient handling of reclaimable space and so far no patches were required.
-> 
->    当涉及到不断修改数据的数据库时，它们会产生大量可回收空间(在 LMDB 术语中也称为“自由职业者”)。当使用可回收空间时，我们不得不修补 LMDB 来修复最严重的缺陷(这里分析: https://github.com/ledgerwatch/erigon/wiki/LMDB-freelist-illustrated-guide 空间)。MDBX 特别注意有效处理可回收空间，迄今为止没有补丁需要。
-> 
-> 4.
->    According to our tests, MDBX performs slightly better on our workloads.
-> 
->    根据我们的测试，MDBX 在我们的工作负载上表现稍好一些。
-> 
-> 5.
->    MDBX exposes more internal telemetry - more metrics of what happening inside DB. And we have them in Grafana - to make better decisions on app design. For example, after complete transition to MDBX (removing LMDB support) we will implement "commit half-full transactions" strategy to avoid spill/unspill disk touches. This will simplify our code further without affecting performance.
-> 
->    MDBX 公开了更多的内部遥测数据——关于 DB 内部发生的情况的更多指标。而且我们在 Grafana 也有这样的机构——它们可以在应用程序设计上做出更好的决策。例如，在完全转换到 MDBX (删除 LMDB 支持)之后，我们将实现“提交半满事务”策略，以避免溢出/未溢出磁盘。这将进一步简化我们的代码，而不会影响性能。
-> 
-> 6.
->    MDBX has support for "Exclusive open" mode - we using it for DB migrations, to prevent any other reader from accessing the database while DB migration is in progress.
-> 
->    MDBX 支持“ Exclusive open”模式——我们使用它进行 DB 迁移，以防止任何其他读取器在 DB 迁移过程中访问数据库。
+>    MDBX 支持“ Exclusive open”模式 — 我们使用它进行 DB 迁移，以防止任何其他读取器在 DB 迁移过程中访问数据库。
 
-maxdbs 打开数据的时可以更新原有设置.
+
+
+
+
+maxdbs 打开数据的时可以更新原有设置。
 一开始可以设置小一点的值，有需要再加大。
 
 ## use example
