@@ -84,7 +84,7 @@ fn main() -> Result<()> {
     // 读取
     match r!(Test1).get([2,3])? {
       Some(r)=>{
-        println!("u16::from_le_bytes({:?}) = {}", r, u16::from_le_bytes((*r).try_into()?));
+        println!("\nu16::from_le_bytes({:?}) = {}", r, u16::from_le_bytes((*r).try_into()?));
       }
       None => unreachable!()
     }
@@ -101,16 +101,19 @@ fn main() -> Result<()> {
     test1.set(&[2],&[3])?;
     test1.set([8],&[9])?;
 
-    for (k,v) in test1 {
+    println!("\n-- loop test1 rev");
+    for (k,v) in test1.rev() {
       println!("{:?} = {:?}",k,v);
     }
 
     test1.del([8])?;
 
-    println!("get after del {:?}", test1.get([8]));
+    println!("\nget after del {:?}", test1.get([8]));
 
-    test2.set("rmw.link","Down with Data Hegemony · Cyberland Revolution")?;
+    test2.set("rmw.link","Down with Data Hegemony")?;
+    test2.set(&"a",&"b")?;
 
+    println!("\n-- loop test2");
     for (k,v) in test2 {
       println!("{:?} = {:?}",k,v);
     }
@@ -124,18 +127,22 @@ fn main() -> Result<()> {
 运行输出如下
 
 ```
-   Compiling mdbx v0.0.2 (/Users/z/rmw/mdbx)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.84s
-     Running `target/debug/examples/01`
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/main.mdb
 mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.2
+
 u16::from_le_bytes(Bin([4, 5])) = 1284
-Bin([2]) = Bin([3])
-Bin([2, 3]) = Bin([4, 5])
-Bin([8]) = Bin([9])
+
+-- loop test1 rev
 Bin([9]) = Bin([10, 12])
+Bin([8]) = Bin([9])
+Bin([2, 3]) = Bin([4, 5])
+Bin([2]) = Bin([3])
+
 get after del Ok(None)
-Bin([114, 109, 119, 46, 108, 105, 110, 107]) = Bin([68, 111, 119, 110, 32, 119, 105, 116, 104, 32, 68, 97, 116, 97, 32, 72, 101, 103, 101, 109, 111, 110, 121, 32, 194, 183, 32, 67, 121, 98, 101, 114, 108, 97, 110, 100, 32, 82, 101, 118, 111, 108, 117, 116, 105, 111, 110])
+
+-- loop test2
+Bin([97]) = Bin([98])
+Bin([114, 109, 119, 46, 108, 105, 110, 107]) = Bin([68, 111, 119, 110, 32, 119, 105, 116, 104, 32, 68, 97, 116, 97, 32, 72, 101, 103, 101, 109, 111, 110, 121])
 ```
 
 ## 数据库标志
