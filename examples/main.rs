@@ -30,15 +30,32 @@ fn main() -> Result<()> {
   }
 
   {
-    w!(Test).set([1,2],[3,4])?;
+    // 写入
+    w!(Test).set([2,3],[4,5])?;
   }
   {
-    match r!(Test).get([1,2])? {
+    // 读取
+    match r!(Test).get([2,3])? {
       Some(r)=>{
         dbg!(r);
       }
       None => unreachable!()
     }
   }
+
+  {
+    let tx = w!();
+    let test = tx | Test;
+
+    test.set(&[9],&[10,12])?;
+    test.set(&[2],&[3])?;
+    test.set([8],&[9])?;
+
+    for (k,v) in test {
+      println!("{:?} = {:?}",k,v);
+    }
+
+  }
+
   Ok(())
 }
