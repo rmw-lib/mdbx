@@ -9,7 +9,6 @@ cd $_DIR
 git pull
 
 ./clippy.sh
-./example.sh > example.out
 
 npx @rmw/md-include .markdown.json
 
