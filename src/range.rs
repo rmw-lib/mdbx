@@ -138,7 +138,7 @@ macro_rules! range_from {
 }
 
 db_range!(RangeFrom, range_from, MDBX_SET_LOWERBOUND, MDBX_NEXT);
-db_range_rev!(RangeFrom, range_from, MDBX_SET_UPPERBOUND, MDBX_PREV);
+db_range_rev!(RangeFrom, range_from, MDBX_SET_LOWERBOUND_REV, MDBX_PREV);
 
 macro_rules! range_range_inclusive {
   ($range:ident, $db:ident, $cursor:ident, $val:ident, $gt:tt, $lt:tt) => {{
@@ -164,7 +164,7 @@ macro_rules! range_range_inclusive {
             OP::MDBX_SET_LOWERBOUND
           } else {
             next = OP::MDBX_PREV;
-            OP::MDBX_SET_UPPERBOUND
+            OP::MDBX_SET_LOWERBOUND_REV
           }
         } else {
           next
