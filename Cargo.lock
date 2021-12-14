@@ -135,9 +135,9 @@ dependencies = [
 
 [[package]]
 name = "mdbx-ffi"
-version = "0.0.4"
+version = "0.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f118d3f60c7111477aa4a9b6ce3a36187ede373026cc30b30b49922f00f3a4f1"
+checksum = "5a3f3a25f8db1ab253d8894ac7b73355f5409a81493913c27efa40b7efe21e94"
 dependencies = [
  "bindgen",
  "cc",
