@@ -1,4 +1,4 @@
 language = "rust"
-run = "./.envrc && direnv exec cargo +nightly run --example 01"
+run = ". ./.envrc && direnv exec cargo +nightly run --example 01"
 
 
