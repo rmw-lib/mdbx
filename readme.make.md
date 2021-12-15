@@ -61,7 +61,7 @@
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
 
-<iframe src="https://replit.com/@SamitMohnot/TRY-SREH-DB-LOGIN?lite=icon_title_nologo&theme=replitLight"></iframe>
+<iframe src="https://replit.com/@gcxfd/mdbx?lite=icon_title_nologo&theme=replitLight"></iframe>
 
 rust 代码如下 :
 
