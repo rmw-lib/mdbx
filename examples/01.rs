@@ -19,6 +19,7 @@ mdbx! {
 }
 
 fn main() -> Result<()> {
+  // 输出libmdbx的版本号
   unsafe {
     println!(
       "mdbx version https://github.com/erthink/libmdbx/releases/tag/v{}.{}.{}",

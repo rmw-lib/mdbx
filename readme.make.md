@@ -55,6 +55,8 @@
 
 然后运行 `cargo run --example 01` ，就运行了 `examples/01.rs`
 
+如果是自己的项目，请先运行`cargo add mdbx lazy_static`
+
 ### 写和读 : set & get
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
@@ -69,14 +71,74 @@
 #include examples/01.out
 ```
 
-#### 代码解读
+#### 代码说明
+
+#### env_rw 定义数据库
+
+代码一开始使用了一个宏 env_rw，这个宏有4个参数。
+
+1. 数据库环境的变量名
+
+2. 返回一个  对象，[mdbx::env::Config](https://docs.rs/mdbx/latest/src/mdbx/env.rs.html#27-35) ，默认配置如下。
+   
+   ```
+   #[derive(Clone, Debug)]
+   pub struct Config {
+     path: PathBuf,
+     mode: ffi::mdbx_mode_t,
+     flag: flag::ENV,
+     sync_period: u64,
+     sync_bytes: u64,
+     max_db: u64,
+     pagesize: isize,
+   }
+   
+   lazy_static! {
+     pub static ref ENV_CONFIG_DEFAULT: Config = Config {
+       path:PathBuf::new(),
+       mode: 0o600,
+       //https://github.com/erthink/libmdbx/issues/248
+       sync_period : 65536, // 以 1/65536 秒为单位
+       sync_bytes : 65536,
+       max_db : 256,
+       flag : (
+         // https://erthink.github.io/libmdbx/group__c__opening.html#ga9138119a904355d245777c4119534061
+           flag::ENV::MDBX_EXCLUSIVE
+         | flag::ENV::MDBX_LIFORECLAIM
+         | flag::ENV::MDBX_COALESCE
+         | flag::ENV::MDBX_NOMEMINIT
+         | flag::ENV::MDBX_NOSUBDIR
+         | flag::ENV::MDBX_SAFE_NOSYNC
+         // | flag::ENV::MDBX_SYNC_DURABLE
+       ),
+       pagesize:-1
+     };
+   }
+   ```
+   
+   `max_db` 是最大的数据库个数，[最多32765个数据库](https://github.com/erthink/libmdbx)，这个设置可以在每次打开数据库时重设，设置太大会影响性能，按需设置即可。
+   
+   其他参数含义参见 [libmdbx的文档](https://erthink.github.io/libmdbx/group__c__opening.html#ga9138119a904355d245777c4119534061) 。
+   
+   我们使用默认配置，因为`Env`实现了`From<Into<PathBuf>>`，所以数据库路径`into()`即可。
+
+3. 数据库读事务宏的名称，默认值为`r`
+
+4. 数据库写事务宏的名称，默认值为`w`
+
+其中3、4参数可以省略使用默认值。
+
+#### 宏展开
+
+如果想看看宏魔法到底干了什么，可以用`cargo expand --example 01` 宏展开，此指令需要先安装 `cargo install cargo-expand`
+
+展开后的代码截图如下：
+
+![PDzEtT](https://raw.githubusercontent.com/gcxfd/img/gh-pages/PDzEtT.png)
 
 ##### anyhow 和 lazy_static
 
-```
-use anyhow::{Ok, Result};
-use lazy_static::lazy_static;
-```
+从展开后的截图，可以看到，使用了`lazy_static`和`anyhow`。
 
 [anyhow](https://rustmagazine.github.io/rust_magazine_2021/chapter_2/rust_error_handle.html#thiserror--anyhow) 是 rust 的错误处理库。
 
@@ -84,19 +146,17 @@ use lazy_static::lazy_static;
 
 这两个库很常见，我不赘言。
 
-##### 数据库环境配置 pub static ref MDBX: Env
-
-这里创建了一个数据库环境。
-
-
-
-
-
 ##### 线程与事务
 
-同一线程同一时间只能启用一个事务。
+上面代码演示了，多线程读写。
+
+值得注意的是，**同一线程同一时间只能有一个事务，如果某进程打开多个事务会崩溃**。
 
 事务会在作用域结束时提交。
+
+
+
+### 
 
 ### 遍历
 
