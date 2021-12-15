@@ -14,7 +14,7 @@ env_rw!(
 );
 
 mdbx! {
-  MDBX // 数据库ENV的变量名
+  MDBX // 数据库 Env 的变量名
   Test // 数据库 Test
 }
 
@@ -33,6 +33,14 @@ fn main() -> Result<()> {
     let test = tx | Test;
     test.set([1, 2], [6])?;
     println!("test1 get {:?}", test.get([1, 2]));
+
+    match test.get([1, 2])? {
+      Some(val) => {
+        let t:&[u8] = &val;
+        println!("{:?}",t);
+      },
+      None => unreachable!()
+    }
     Ok(())
   });
 
