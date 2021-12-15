@@ -63,6 +63,10 @@
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
 
+<iframe src="https://replit.com/@gcxfd/mdbx?lite=icon_title_nologo&theme=replitLight#examples/01.rs"> </iframe>
+
+rust 代码如下 :
+
 ```rust
 use anyhow::{Ok, Result};
 use mdbx::prelude::*;
@@ -116,7 +120,7 @@ fn main() -> Result<()> {
 }
 ```
 
-运行输出如下
+运行输出如下 :
 
 ```
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/01.mdb
@@ -134,7 +138,7 @@ test1 get Ok(Some(Bin([6])))
 1. 数据库环境的变量名
 
 2. 返回一个  对象，[mdbx:: env:: Config](https://docs.rs/mdbx/latest/src/mdbx/env.rs.html#27-35) ，默认配置如下。
-   
+
    ```rust
    #[derive(Clone, Debug)]
    pub struct Config {
@@ -146,7 +150,7 @@ test1 get Ok(Some(Bin([6])))
      max_db: u64,
      pagesize: isize,
    }
-   
+
    lazy_static! {
      pub static ref ENV_CONFIG_DEFAULT: Config = Config {
        path:PathBuf::new(),
@@ -169,11 +173,11 @@ test1 get Ok(Some(Bin([6])))
      };
    }
    ```
-   
+
    `max_db` 是最大的数据库个数，[最多 32765 个数据库](https://github.com/erthink/libmdbx)，这个设置可以在每次打开数据库时重设，设置太大会影响性能，按需设置即可。
-   
+
    其他参数含义参见 [libmdbx 的文档](https://erthink.github.io/libmdbx/group__c__opening.html#ga9138119a904355d245777c4119534061) 。
-   
+
    我们使用默认配置，因为 `Env` 实现了 `From<Into<PathBuf>>`，所以数据库路径 `into()` 即可。
 
 3. 数据库读事务宏的名称，默认值为 `r`
@@ -325,11 +329,10 @@ fn main() -> Result<()> {
 }
 ```
 
-运行输出如下
+vi 运行输出如下
 
 ```
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/02.mdb
-mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.2
 
 u16::from_le_bytes(Bin([4, 5])) = 1284
 
@@ -402,7 +405,7 @@ https://github.com/erthink/libmdbx#limitations
 [^erigon]: [Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX。](https://github.com/ledgerwatch/erigon/wiki/Criteria-for-transitioning-from-Alpha-to-Beta#switch-from-lmdb-to-mdbx)
 
     他们列举了从 LMDB 过渡到 MDBX 的好处：
-    
+
     > Erigon 开始使用 BoltDB 数据库后端，然后增加了对 BadgerDB 的支持，最后完全迁移到 LMDB。在某些时候，我们遇到了稳定性问题，这些问题是由我们对 LMDB 的使用引起的，而这些问题是创造者没有预料到的。从那时起，我们一直在关注一个支持良好的 LMDB 的衍生产品，称为 MDBX，并希望使用他们的稳定性改进，并有可能在未来进行更多的合作。MDBX 的整合已经完成，现在是时候进行更多的测试和记录了。
     >
     > 从 LMDB 过渡到 MDBX 的好处：
