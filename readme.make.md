@@ -171,9 +171,24 @@ mdbx! {
 
 ##### 读写二进制数据
 
+```rust
+let tx = w!();
+let test = tx | Test;
+test.set([1, 2], [6])?;
+println!("test1 get {:?}", test.get([1, 2]));
+
+match test.get([1, 2])? {
+ Some(val) => {
+  let t:&[u8] = &val;
+  println!("{:?}",t);
+ },
+ None => unreachable!()
+}
+```
+
 `set` 是写，`get` 是读，任何实现了 `AsRef<[u8]>` 的对象都可以写入数据库。
 
-
+`get` 出来的东西是 `Ok(Some(Bin([6])))`，可以转为 `&[u8]`。
 
 ### 遍历
 
