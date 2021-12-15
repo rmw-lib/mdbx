@@ -1,3 +1,3 @@
 language = "rust"
 run = "~/.cargo/bin/cargo +nightly run --example 01"
-onBoot = "curl -s https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y" 
+afterInstall = "curl -s https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y" 
