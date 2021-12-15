@@ -1,3 +1,3 @@
 language = "rust"
-run = "./.envrc && ~/.cargo/bin/cargo +nightly run --example 01"
-onBoot = "echo 'onBoot!!!'"
+run = "~/.cargo/bin/cargo +nightly run --example 01"
+onBoot = "./.envrc"
