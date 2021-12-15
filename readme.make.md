@@ -81,7 +81,7 @@
 
 2. 返回一个  对象，[mdbx:: env:: Config](https://docs.rs/mdbx/latest/src/mdbx/env.rs.html#27-35) ，默认配置如下。
    
-   ```
+   ```rust
    #[derive(Clone, Debug)]
    pub struct Config {
      path: PathBuf,
@@ -198,7 +198,7 @@ match test.get([1, 2])? {
 #include examples/02.rs
 ```
 
-运行输出如下
+vi 运行输出如下
 
 ```
 #include examples/02.out

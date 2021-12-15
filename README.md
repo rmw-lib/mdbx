@@ -102,10 +102,10 @@ fn main() -> Result<()> {
 
     match test.get([1, 2])? {
       Some(val) => {
-        let t:&[u8] = &val;
-        println!("{:?}",t);
-      },
-      None => unreachable!()
+        let t: &[u8] = &val;
+        println!("{:?}", t);
+      }
+      None => unreachable!(),
     }
     Ok(())
   });
@@ -135,7 +135,7 @@ test1 get Ok(Some(Bin([6])))
 
 2. 返回一个  对象，[mdbx:: env:: Config](https://docs.rs/mdbx/latest/src/mdbx/env.rs.html#27-35) ，默认配置如下。
    
-   ```
+   ```rust
    #[derive(Clone, Debug)]
    pub struct Config {
      path: PathBuf,

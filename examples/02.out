@@ -1,5 +1,4 @@
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/02.mdb
-mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.2
 
 u16::from_le_bytes(Bin([4, 5])) = 1284
 

@@ -36,10 +36,10 @@ fn main() -> Result<()> {
 
     match test.get([1, 2])? {
       Some(val) => {
-        let t:&[u8] = &val;
-        println!("{:?}",t);
-      },
-      None => unreachable!()
+        let t: &[u8] = &val;
+        println!("{:?}", t);
+      }
+      None => unreachable!(),
     }
     Ok(())
   });
