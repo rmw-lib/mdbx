@@ -55,7 +55,7 @@
 
 然后运行 `cargo run --example 01` ，就运行了 `examples/01.rs`
 
-如果是自己的项目，请先运行`cargo add mdbx lazy_static`
+如果是自己的项目，请先运行 `cargo add mdbx lazy_static`
 
 ### 写和读 : set & get
 
@@ -75,11 +75,11 @@
 
 #### env_rw 定义数据库
 
-代码一开始使用了一个宏 env_rw，这个宏有4个参数。
+代码一开始使用了一个宏 env_rw，这个宏有 4 个参数。
 
 1. 数据库环境的变量名
 
-2. 返回一个  对象，[mdbx::env::Config](https://docs.rs/mdbx/latest/src/mdbx/env.rs.html#27-35) ，默认配置如下。
+2. 返回一个  对象，[mdbx:: env:: Config](https://docs.rs/mdbx/latest/src/mdbx/env.rs.html#27-35) ，默认配置如下。
    
    ```
    #[derive(Clone, Debug)]
@@ -116,21 +116,21 @@
    }
    ```
    
-   `max_db` 是最大的数据库个数，[最多32765个数据库](https://github.com/erthink/libmdbx)，这个设置可以在每次打开数据库时重设，设置太大会影响性能，按需设置即可。
+   `max_db` 是最大的数据库个数，[最多 32765 个数据库](https://github.com/erthink/libmdbx)，这个设置可以在每次打开数据库时重设，设置太大会影响性能，按需设置即可。
    
-   其他参数含义参见 [libmdbx的文档](https://erthink.github.io/libmdbx/group__c__opening.html#ga9138119a904355d245777c4119534061) 。
+   其他参数含义参见 [libmdbx 的文档](https://erthink.github.io/libmdbx/group__c__opening.html#ga9138119a904355d245777c4119534061) 。
    
-   我们使用默认配置，因为`Env`实现了`From<Into<PathBuf>>`，所以数据库路径`into()`即可。
+   我们使用默认配置，因为 `Env` 实现了 `From<Into<PathBuf>>`，所以数据库路径 `into()` 即可。
 
-3. 数据库读事务宏的名称，默认值为`r`
+3. 数据库读事务宏的名称，默认值为 `r`
 
-4. 数据库写事务宏的名称，默认值为`w`
+4. 数据库写事务宏的名称，默认值为 `w`
 
-其中3、4参数可以省略使用默认值。
+其中 3、4 参数可以省略使用默认值。
 
 #### 宏展开
 
-如果想看看宏魔法到底干了什么，可以用`cargo expand --example 01` 宏展开，此指令需要先安装 `cargo install cargo-expand`
+如果想看看宏魔法到底干了什么，可以用 `cargo expand --example 01` 宏展开，此指令需要先安装 `cargo install cargo-expand`
 
 展开后的代码截图如下：
 
@@ -138,7 +138,7 @@
 
 ##### anyhow 和 lazy_static
 
-从展开后的截图，可以看到，使用了`lazy_static`和`anyhow`。
+从展开后的截图，可以看到，使用了 `lazy_static` 和 `anyhow`。
 
 [anyhow](https://rustmagazine.github.io/rust_magazine_2021/chapter_2/rust_error_handle.html#thiserror--anyhow) 是 rust 的错误处理库。
 
@@ -154,8 +154,6 @@ mdbx! {
  Test // 数据库 Test
 }
 ```
-
-
 
 第一行参数是数据库环境的变量名
 
@@ -173,7 +171,7 @@ mdbx! {
 
 #### 读写二进制数据
 
-`set`是写，`get`是读，任何实现了`AsRef<[u8]>`的对象都可以写入数据库。
+`set` 是写，`get` 是读，任何实现了 `AsRef<[u8]>` 的对象都可以写入数据库。
 
 ### 遍历
 
