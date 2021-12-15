@@ -1,0 +1,4 @@
+language = "rust"
+run = "./envrc && cargo +nightly run --example 01"]
+
+
