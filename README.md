@@ -127,7 +127,7 @@ test1 get Ok(Some(Bin([6])))
 
 #### 代码说明
 
-#### env_rw 定义数据库
+##### env_rw 定义数据库
 
 代码一开始使用了一个宏 env_rw，这个宏有 4 个参数。
 
@@ -182,7 +182,7 @@ test1 get Ok(Some(Bin([6])))
 
 其中 3、4 参数可以省略使用默认值。
 
-#### 宏展开
+##### 宏展开
 
 如果想看看宏魔法到底干了什么，可以用 `cargo expand --example 01` 宏展开，此指令需要先安装 `cargo install cargo-expand`
 
@@ -200,7 +200,7 @@ test1 get Ok(Some(Bin([6])))
 
 这两个库很常见，我不赘言。
 
-#### 宏 mdbx!
+##### 宏 mdbx!
 
 ```rust
 mdbx! {
@@ -208,8 +208,6 @@ mdbx! {
  Test // 数据库 Test
 }
 ```
-
-
 
 第一行参数是数据库环境的变量名
 
