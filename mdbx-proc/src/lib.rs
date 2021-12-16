@@ -63,11 +63,11 @@ const DUP: &str = "Dup";
 const LITTLE_ENDIAN: bool = cfg!(target_endian = "little");
 
 macro_rules! _static {
-  ($x:ident)=>{
-    if ["Bin","Str"].contains(&$x.as_str()) {
-      $x = format!("{}<'static>",$x);
+  ($x:ident) => {
+    if ["Bin", "Str"].contains(&$x.as_str()) {
+      $x = format!("{}<'static>", $x);
     }
-  }
+  };
 }
 
 #[proc_macro]
@@ -87,7 +87,10 @@ pub fn mdbx(input: TokenStream) -> TokenStream {
           get!($key, "mdbx::r#type::Bin<'static>")
         };
         ($key: ident, $default: expr) => {
-          map.get(stringify!($key)).map_or($default, String::as_str).to_string()
+          map
+            .get(stringify!($key))
+            .map_or($default, String::as_str)
+            .to_string()
         };
       }
 
@@ -97,7 +100,7 @@ pub fn mdbx(input: TokenStream) -> TokenStream {
       let flag = &get!(flag, "DB_DEFAULTS");
       let mut flag = flag.split('|').collect::<Vec<&str>>();
 
-      let kind = if flag.contains(&&"DUPSORT") { DUP } else { ONE };
+      let kind = if flag.contains(&"DUPSORT") { DUP } else { ONE };
 
       if key == "u32" || key == "u64" || key == "usize" {
         flag.push("INTEGERKEY");
@@ -111,20 +114,17 @@ pub fn mdbx(input: TokenStream) -> TokenStream {
 
       _static!(val);
 
-      if kind == DUP {
-        if [
+      if kind == DUP
+        && [
           "usize", "u128", "u64", "u32", "u16", "u8", "isize", "i128", "i64", "i32", "i16", "i8",
         ]
         .contains(&val.as_str())
-        {
-          flag.push("DUPFIXED");
-          if val == "u32" || val == "u64" || val == "usize" {
-            flag.push("INTEGERDUP")
-          } else {
-            if LITTLE_ENDIAN {
-              flag.push("REVERSEDUP");
-            }
-          }
+      {
+        flag.push("DUPFIXED");
+        if val == "u32" || val == "u64" || val == "usize" {
+          flag.push("INTEGERDUP")
+        } else if LITTLE_ENDIAN {
+          flag.push("REVERSEDUP");
         }
       }
 
