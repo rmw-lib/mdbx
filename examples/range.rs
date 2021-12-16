@@ -43,15 +43,14 @@ fn main() -> Result<()> {
     println!("\n> Test0");
     let tx = &MDBX.w()?;
     let test0 = tx | Test0;
-    test0.set([0], [0,1])?;
-    test0.set([1], [1,2])?;
-    test0.set([2], [2,3])?;
-    test0.set([1,1], [1,3])?;
+    test0.set([0], [0, 1])?;
+    test0.set([1], [1, 2])?;
+    test0.set([2], [2, 3])?;
+    test0.set([1, 1], [1, 3])?;
     test0.set([3], [])?;
 
     range!(test0, [1]..);
     range!(test0, [1]..=[2]);
-
   }
 
   {
@@ -71,6 +70,7 @@ fn main() -> Result<()> {
       println!("{:?}", i);
     }
     range!(test1, 1..3);
+    range!(test1, 3..1);
     range!(test1, 1..=3);
     range!(test1, ..3);
     range!(test1, 3..);
@@ -96,7 +96,6 @@ fn main() -> Result<()> {
     range!(test2, 3..);
     range_rev!(test2, ..1);
     range_rev!(test2, ..=1);
-
   }
 
   Ok(())

@@ -54,10 +54,10 @@ fn main() -> Result<()> {
       println!("{} = {}", k, v);
     }
 
-    dbg!(test1.del_val([8,1],[3])?);
-    dbg!(test1.get([8,1])?.unwrap());
-    dbg!(test1.del_val([8,1],[9])?);
-    dbg!(test1.get([8,1])?);
+    dbg!(test1.del_val([8, 1], [3])?);
+    dbg!(test1.get([8, 1])?.unwrap());
+    dbg!(test1.del_val([8, 1], [9])?);
+    dbg!(test1.get([8, 1])?);
 
     dbg!(test1.del([9])?);
     dbg!(test1.get([9])?);
