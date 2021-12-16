@@ -20,7 +20,7 @@ git add -u
 git commit -m $version
 git tag v$version
 git push v$version -f
-git push
+git push -f
 
 cargo +nightly publish
 
