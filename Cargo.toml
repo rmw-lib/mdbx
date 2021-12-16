@@ -14,8 +14,8 @@ crate-type = ["lib"]
 [dependencies]
 #ffi = {package = "mdbx-ffi",path = "../mdbx-ffi" }
 ffi = { package = "mdbx-ffi", version = "0.0.5" }
-mdbx-proc = {path = "./mdbx-proc"}
-#mdbx-proc = "0.1.0"
+#mdbx-proc = {path = "./mdbx-proc"}
+mdbx-proc = "0.1.1"
 os_str_bytes = "6.0.0"
 anyhow = "1.0.51"
 libc = "0.2.112"
