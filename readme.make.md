@@ -47,9 +47,7 @@
 
 与此同时，[mdbx 改进了不少 lmdb 的缺憾](https://github.com/erthink/libmdbx#improvements-beyond-lmdb)，因此 Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX [^erigon] 。
 
-## 使用示例
-
-### 如何运行示例
+## 如何运行示例
 
 首先克隆代码库 `git clone git@github.com:rmw-lib/mdbx.git --depth=1 && cd mdbx`
 
@@ -59,9 +57,7 @@
 
 ### 写和读 : set & get
 
-我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) :
-
-<iframe src="https://replit.com/@gcxfd/mdbx?lite=icon_title_nologo&theme=replitLight#examples/01.rs"> </iframe>
+我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) ([点此在线运行](https://replit.com/@gcxfd/mdbx?lite=icon_title_nologo&theme=replitLight#examples/01.rs)):
 
 rust 代码如下 :
 
