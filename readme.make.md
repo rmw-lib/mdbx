@@ -55,7 +55,11 @@
 
 然后运行 `cargo run --example 01` ，就运行了 `examples/01.rs`
 
-如果是自己的项目，请先运行 `cargo add mdbx lazy_static`
+如果是自己的项目，请先运行 :
+
+```bash
+cargo add mdbx lazy_static ctor paste
+```
 
 ### 示例 1 : 写 `set(key,val)` 和 读 `.get(key)`
 
