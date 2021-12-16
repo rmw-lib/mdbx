@@ -51,7 +51,7 @@ fn main() -> Result<()> {
     test0.set([3], [])?;
 
     range!(test0, [1]..);
-    let begin : &[u8] = &[1,1];
+    let begin: &[u8] = &[1, 1];
     range!(test0, begin..=&[2]);
   }
 
