@@ -81,7 +81,9 @@ rust 代码如下 :
 
 1. 数据库环境的变量名
 
-2. 返回一个  对象，[mdbx:: env:: Config](https://docs.rs/mdbx/latest/src/mdbx/env.rs.html#27-35) ，默认配置如下。
+2. 返回一个  对象，[mdbx:: env:: Config](https://docs.rs/mdbx/latest/src/mdbx/env.rs.html#27-35) 。
+
+   我们使用默认配置，因为 `Env` 实现了 `From<Into<PathBuf>>`，所以数据库路径 `into()` 即可，默认配置如下。
 
    ```rust
    #[derive(Clone, Debug)]
@@ -122,7 +124,6 @@ rust 代码如下 :
 
    其他参数含义参见 [libmdbx 的文档](https://erthink.github.io/libmdbx/group__c__opening.html#ga9138119a904355d245777c4119534061) 。
 
-   我们使用默认配置，因为 `Env` 实现了 `From<Into<PathBuf>>`，所以数据库路径 `into()` 即可。
 
 3. 数据库读事务宏的名称，默认值为 `r`
 
@@ -200,7 +201,7 @@ match test.get([1, 2])? {
 #include examples/02.rs
 ```
 
-vi 运行输出如下
+运行输出如下
 
 ```
 #include examples/02.out

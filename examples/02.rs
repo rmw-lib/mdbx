@@ -9,9 +9,7 @@ env_rw!(
     db_path.set_extension("mdb");
     println!("mdbx file path {}", db_path.display());
     db_path.into()
-  },
-  r,
-  w
+  }
 );
 
 mdbx! {
