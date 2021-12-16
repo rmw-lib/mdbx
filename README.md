@@ -271,9 +271,12 @@ mdbx! {
   MDBX // 数据库ENV的变量名
   Test1 // 数据库 Test1
   Test2 // 数据库 Test2
+    key Str<'static>
+    val Str<'static>
+  Test3 // 数据库 Test2
     key i32
     val u64
-  Test3 // 数据库 Test3
+  Test4 // 数据库 Test3
     key u64
     val u16
     flag DUPSORT
@@ -301,46 +304,54 @@ fn main() -> Result<()> {
     let test1 = tx | Test1;
 
     test1.set(&[9], &[10, 12])?;
-    test1.set(&[2], &[3])?;
-    test1.set([8], &[9])?;
+    test1.set([8, 1], [9])?;
     test1.set("rmw.link", "Down with Data Hegemony")?;
     test1.set(&"abc", &"012")?;
 
-    println!("\n-- loop test1 rev");
+    println!("\n-- loop test1");
     for (k, v) in test1 {
-      println!("{:?} = {:?}", k, v);
+      println!("{} = {}", k, v);
     }
 
     test1.del([8])?;
 
     println!("\nget after del {:?}", test1.get([8]));
 
+
     let test2 = tx | Test2;
-
-    test2.set(13,32)?;
-    test2.set(16,32)?;
-    test2.set(-15,6)?;
-    test2.set(-10,6)?;
-    test2.set(-12,6)?;
-    test2.set(0,6)?;
-    test2.set(10,5)?;
-
+    test2.set("rmw.link", "Down with Data Hegemony")?;
+    test2.set(&"abc", &"012")?;
     println!("\n-- loop test2");
     for (k, v) in test2 {
-      println!("{:?} = {:?}", k, v);
+      println!("{} = {}", k, v);
     }
 
     let test3 = tx | Test3;
-    test3.set(10,5)?;
-    test3.set(10,0)?;
+
     test3.set(13,32)?;
-    test3.set(16,2)?;
-    test3.set(16,1)?;
-    test3.set(16,3)?;
+    test3.set(16,32)?;
+    test3.set(-15,6)?;
+    test3.set(-10,6)?;
+    test3.set(-12,6)?;
     test3.set(0,6)?;
     test3.set(10,5)?;
-    println!("\n-- loop test3 rev");
-    for (k, v) in test3.rev() {
+
+    println!("\n-- loop test3");
+    for (k, v) in test3 {
+      println!("{:?} = {:?}", k, v);
+    }
+
+    let test4 = tx | Test4;
+    test4.set(10,5)?;
+    test4.set(10,0)?;
+    test4.set(13,32)?;
+    test4.set(16,2)?;
+    test4.set(16,1)?;
+    test4.set(16,3)?;
+    test4.set(0,6)?;
+    test4.set(10,5)?;
+    println!("\n-- loop test4 rev");
+    for (k, v) in test4.rev() {
       println!("{:?} = {:?}", k, v);
     }
     // 事务会在作用域的结尾提交
@@ -357,17 +368,21 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/02.mdb
 
 u16::from_le_bytes(Bin([4, 5])) = 1284
 
--- loop test1 rev
-Bin([2]) = Bin([3])
-Bin([2, 3]) = Bin([4, 5])
-Bin([8]) = Bin([9])
-Bin([9]) = Bin([10, 12])
-Bin([97, 98, 99]) = Bin([48, 49, 50])
-Bin([114, 109, 119, 46, 108, 105, 110, 107]) = Bin([68, 111, 119, 110, 32, 119, 105, 116, 104, 32, 68, 97, 116, 97, 32, 72, 101, 103, 101, 109, 111, 110, 121])
+-- loop test1
+[2] = [3]
+[2, 3] = [4, 5]
+[8, 1] = [9]
+[9] = [10, 12]
+[97, 98, 99] = [48, 49, 50]
+[114, 109, 119, 46, 108, 105, 110, 107] = [68, 111, 119, 110, 32, 119, 105, 116, 104, 32, 68, 97, 116, 97, 32, 72, 101, 103, 101, 109, 111, 110, 121]
 
 get after del Ok(None)
 
 -- loop test2
+abc = 012
+rmw.link = Down with Data Hegemony
+
+-- loop test3
 0 = 6
 10 = 5
 13 = 32
@@ -376,7 +391,7 @@ get after del Ok(None)
 -12 = 6
 -10 = 6
 
--- loop test3 rev
+-- loop test4 rev
 16 = 3
 16 = 2
 16 = 1
@@ -406,9 +421,9 @@ w!(Test1.set [2, 3],[4, 5])
 都一行搞定， 正如 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) 写的那样。
 
 
-#### 数据类型
+#### 数据类型 和 数据库标志
 
-在 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) 中，声明数据库时定义了键和值数据类型。
+在 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) 中，数据库定义是这样的 :
 
 ```rust
 Test2 // 数据库 Test2
@@ -417,9 +432,12 @@ Test2 // 数据库 Test2
 Test3 // 数据库 Test3
   key u64
   val u16
+  flag DUPSORT
 ```
 
-数据类型如果不一致会报错，截图如下 :
+其中 `key` 和 `val` 分别定义了键和值的数据类型。
+
+如果试图写入的数据类型和定义的不匹配，会报错，截图如下 :
 
 ![](https://raw.githubusercontent.com/gcxfd/img/gh-pages/4rFTC6.png)
 

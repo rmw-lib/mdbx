@@ -147,8 +147,6 @@ dependencies = [
 [[package]]
 name = "mdbx-proc"
 version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d67b1cf491fb8d74ac897459b8f9fd133c03b5f6ebf63b9c99c95e20fe6aae87"
 
 [[package]]
 name = "memchr"

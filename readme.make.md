@@ -151,7 +151,7 @@ rust 代码如下 :
 
 ##### 宏 mdbx!
 
-[`mdbx!`](https://docs.rs/mdbx-proc/latest/src/mdbx_proc/lib.rs.html) 是一个[过程宏](https://mp.weixin.qq.com/s/YT_HNFDCQ_IyocvBkRNJnA)。
+[`mdbx!`](https://docs.rs/mdbx-proc/latest/src/mdbx_proc/lib.rs.html) 是一个 [过程宏](https://mp.weixin.qq.com/s/YT_HNFDCQ_IyocvBkRNJnA)。
 
 
 ```rust
@@ -238,9 +238,12 @@ w!(Test1.set [2, 3],[4, 5])
 
 ```rust
 Test2 // 数据库 Test2
+  key Str<'static>
+  val Str<'static>
+Test3 // 数据库 Test2
   key i32
   val u64
-Test3 // 数据库 Test3
+Test4 // 数据库 Test3
   key u64
   val u16
   flag DUPSORT

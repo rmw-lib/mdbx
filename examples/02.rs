@@ -10,14 +10,14 @@ env_rw!(MDBX, {
 
 mdbx! {
   MDBX // 数据库ENV的变量名
-  Test1 // 数据库 Test1
-  Test2 // 数据库 Test2
-    key Str<'static>
-    val Str<'static>
-  Test3 // 数据库 Test2
+  Test1
+  Test2
+    key Str
+    val Str
+  Test3
     key i32
     val u64
-  Test4 // 数据库 Test3
+  Test4
     key u64
     val u16
     flag DUPSORT
