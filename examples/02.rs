@@ -1,15 +1,12 @@
 use anyhow::{Ok, Result};
 use mdbx::prelude::*;
 
-env_rw!(
-  MDBX,
-  {
-    let mut db_path = std::env::current_exe().unwrap();
-    db_path.set_extension("mdb");
-    println!("mdbx file path {}", db_path.display());
-    db_path.into()
-  }
-);
+env_rw!(MDBX, {
+  let mut db_path = std::env::current_exe().unwrap();
+  db_path.set_extension("mdb");
+  println!("mdbx file path {}", db_path.display());
+  db_path.into()
+});
 
 mdbx! {
   MDBX // 数据库ENV的变量名
@@ -18,23 +15,19 @@ mdbx! {
 }
 
 fn main() -> Result<()> {
-  {
-    // 快捷写入
-    w!(Test1).set([2, 3], [4, 5])?;
-  }
+  // 快捷写入
+  w!(Test1).set([2, 3], [4, 5])?;
 
-  {
-    // 快捷读取
-    match r!(Test1).get([2, 3])? {
-      Some(r) => {
-        println!(
-          "\nu16::from_le_bytes({:?}) = {}",
-          r,
-          u16::from_le_bytes((*r).try_into()?)
-        );
-      }
-      None => unreachable!(),
+  // 快捷读取
+  match r!(Test1).get([2, 3])? {
+    Some(r) => {
+      println!(
+        "\nu16::from_le_bytes({:?}) = {}",
+        r,
+        u16::from_le_bytes((*r).try_into()?)
+      );
     }
+    None => unreachable!(),
   }
 
   // 在同一个事务中对多个数据库进行多个操作

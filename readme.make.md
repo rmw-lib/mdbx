@@ -197,6 +197,8 @@ match test.get([1, 2])? {
 
 我们来看第二个例子 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) :
 
+这个例子中，`env_rw!`省略了，第三、第四个参数（`r`,`w`）。
+
 ```rust
 #include examples/02.rs
 ```
@@ -208,6 +210,7 @@ match test.get([1, 2])? {
 ```
 
 #### 快捷读写
+
 
 ### 数据类型
 

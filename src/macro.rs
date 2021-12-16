@@ -13,9 +13,9 @@ macro_rules! env_rw {
       () => {
         &$env.w()?
       };
-      ($db:ident) => {
+      ($db:ident) => {{
         $w!() | $db
-      };
+      }};
     }
 
     #[macro_export]
