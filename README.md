@@ -508,7 +508,7 @@ libmdbx 数据库有很多标志( [`MDBX_db_flags_t`](https://erthink.github.io/
 
 如果要设置多个标志，写法如 `flag DUPSORT | DUPFIXED`
 
-##### `.dup(key)` 返回某个键对应的值的迭代器
+##### `.dup(key)` 返回某键所有对应的值的迭代器
 
 只有标记了 `DUPSORT` 一个键可以对应多个值的数据库，才有这个函数。
 
