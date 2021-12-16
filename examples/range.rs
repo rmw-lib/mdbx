@@ -93,8 +93,9 @@ fn main() -> Result<()> {
     range!(test2, 1..3);
     range!(test2, 1..=3);
     range!(test2, ..3);
-    range!(test2, 3..);
+    range!(test2, 2..);
     range_rev!(test2, ..1);
+    range_rev!(test2, 2..);
     range_rev!(test2, ..=1);
   }
 
