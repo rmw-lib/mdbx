@@ -16,7 +16,8 @@ mdbx! {
     val u64
   Test3 // 数据库 Test3
     key u64
-    val i16
+    val u16
+    flag DUPSORT
 }
 
 fn main() -> Result<()> {
@@ -71,8 +72,12 @@ fn main() -> Result<()> {
     }
 
     let test3 = tx | Test3;
+    test3.set(10,5)?;
+    test3.set(10,0)?;
     test3.set(13,32)?;
-    test3.set(16,32)?;
+    test3.set(16,2)?;
+    test3.set(16,1)?;
+    test3.set(16,3)?;
     test3.set(0,6)?;
     test3.set(10,5)?;
     println!("\n-- loop test3 rev");

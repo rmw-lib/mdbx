@@ -205,6 +205,9 @@ test1 get Ok(Some(Bin([6])))
 
 ##### 宏 mdbx!
 
+[`mdbx!`](https://docs.rs/mdbx-proc/latest/src/mdbx_proc/lib.rs.html) 是一个 [过程宏](https://mp.weixin.qq.com/s/YT_HNFDCQ_IyocvBkRNJnA)。
+
+
 ```rust
 mdbx! {
  MDBX // 数据库 Env 的变量名
@@ -268,6 +271,12 @@ mdbx! {
   MDBX // 数据库ENV的变量名
   Test1 // 数据库 Test1
   Test2 // 数据库 Test2
+    key i32
+    val u64
+  Test3 // 数据库 Test3
+    key u64
+    val u16
+    flag DUPSORT
 }
 
 fn main() -> Result<()> {
@@ -290,11 +299,12 @@ fn main() -> Result<()> {
   {
     let tx = w!();
     let test1 = tx | Test1;
-    let test2 = tx | Test2;
 
     test1.set(&[9], &[10, 12])?;
     test1.set(&[2], &[3])?;
     test1.set([8], &[9])?;
+    test1.set("rmw.link", "Down with Data Hegemony")?;
+    test1.set(&"abc", &"012")?;
 
     println!("\n-- loop test1 rev");
     for (k, v) in test1 {
@@ -305,14 +315,34 @@ fn main() -> Result<()> {
 
     println!("\nget after del {:?}", test1.get([8]));
 
-    test2.set("rmw.link", "Down with Data Hegemony")?;
-    test2.set(&"a", &"b")?;
+    let test2 = tx | Test2;
+
+    test2.set(13,32)?;
+    test2.set(16,32)?;
+    test2.set(-15,6)?;
+    test2.set(-10,6)?;
+    test2.set(-12,6)?;
+    test2.set(0,6)?;
+    test2.set(10,5)?;
 
     println!("\n-- loop test2");
-    for (k, v) in test2.rev() {
+    for (k, v) in test2 {
       println!("{:?} = {:?}", k, v);
     }
 
+    let test3 = tx | Test3;
+    test3.set(10,5)?;
+    test3.set(10,0)?;
+    test3.set(13,32)?;
+    test3.set(16,2)?;
+    test3.set(16,1)?;
+    test3.set(16,3)?;
+    test3.set(0,6)?;
+    test3.set(10,5)?;
+    println!("\n-- loop test3 rev");
+    for (k, v) in test3.rev() {
+      println!("{:?} = {:?}", k, v);
+    }
     // 事务会在作用域的结尾提交
   }
 
@@ -332,12 +362,28 @@ Bin([2]) = Bin([3])
 Bin([2, 3]) = Bin([4, 5])
 Bin([8]) = Bin([9])
 Bin([9]) = Bin([10, 12])
+Bin([97, 98, 99]) = Bin([48, 49, 50])
+Bin([114, 109, 119, 46, 108, 105, 110, 107]) = Bin([68, 111, 119, 110, 32, 119, 105, 116, 104, 32, 68, 97, 116, 97, 32, 72, 101, 103, 101, 109, 111, 110, 121])
 
 get after del Ok(None)
 
 -- loop test2
-Bin([114, 109, 119, 46, 108, 105, 110, 107]) = Bin([68, 111, 119, 110, 32, 119, 105, 116, 104, 32, 68, 97, 116, 97, 32, 72, 101, 103, 101, 109, 111, 110, 121])
-Bin([97]) = Bin([98])
+0 = 6
+10 = 5
+13 = 32
+16 = 32
+-15 = 6
+-12 = 6
+-10 = 6
+
+-- loop test3 rev
+16 = 3
+16 = 2
+16 = 1
+13 = 32
+10 = 5
+10 = 0
+0 = 6
 ```
 
 #### 快捷读写
@@ -353,16 +399,35 @@ r!(Test1.get [2, 3])
 写数据
 
 ```rust
-w!(Test1.set [2, 3],[4, 5]);
+w!(Test1.set [2, 3],[4, 5])
 ```
 
 
 都一行搞定， 正如 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) 写的那样。
 
 
-### 数据类型
+#### 数据类型
 
-### 预置数据类型
+在 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) 中，声明数据库时定义了键和值数据类型。
+
+```rust
+Test2 // 数据库 Test2
+  key i32
+  val u64
+Test3 // 数据库 Test3
+  key u64
+  val u16
+```
+
+数据类型如果不一致会报错，截图如下 :
+
+![](https://raw.githubusercontent.com/gcxfd/img/gh-pages/4rFTC6.png)
+
+
+
+##### 预置数据类型
+
+#### 遍历
 
 ### 自定义数据类型
 

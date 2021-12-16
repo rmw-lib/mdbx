@@ -22,7 +22,10 @@ get after del Ok(None)
 -10 = 6
 
 -- loop test3 rev
-16 = 32
+16 = 3
+16 = 2
+16 = 1
 13 = 32
 10 = 5
+10 = 0
 0 = 6

@@ -151,6 +151,9 @@ rust 代码如下 :
 
 ##### 宏 mdbx!
 
+[`mdbx!`](https://docs.rs/mdbx-proc/latest/src/mdbx_proc/lib.rs.html) 是一个[过程宏](https://mp.weixin.qq.com/s/YT_HNFDCQ_IyocvBkRNJnA)。
+
+
 ```rust
 mdbx! {
  MDBX // 数据库 Env 的变量名
@@ -229,9 +232,31 @@ w!(Test1.set [2, 3],[4, 5])
 都一行搞定， 正如 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) 写的那样。
 
 
-### 数据类型
+#### 数据类型 和 数据库标志
 
-### 预置数据类型
+在 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) 中，数据库定义是这样的 :
+
+```rust
+Test2 // 数据库 Test2
+  key i32
+  val u64
+Test3 // 数据库 Test3
+  key u64
+  val u16
+  flag DUPSORT
+```
+
+其中 `key` 和 `val` 分别定义了键和值的数据类型。
+
+如果试图写入的数据类型和定义的不匹配，会报错，截图如下 :
+
+![](https://raw.githubusercontent.com/gcxfd/img/gh-pages/4rFTC6.png)
+
+
+
+##### 预置数据类型
+
+#### 遍历
 
 ### 自定义数据类型
 
