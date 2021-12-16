@@ -14,6 +14,9 @@ mdbx! {
   Test2 // 数据库 Test2
     key i32
     val u64
+  Test3 // 数据库 Test3
+    key u64
+    val i16
 }
 
 fn main() -> Result<()> {
@@ -63,10 +66,19 @@ fn main() -> Result<()> {
     test2.set(10,5)?;
 
     println!("\n-- loop test2");
-    for (k, v) in test2.rev() {
+    for (k, v) in test2 {
       println!("{:?} = {:?}", k, v);
     }
 
+    let test3 = tx | Test3;
+    test3.set(13,32)?;
+    test3.set(16,32)?;
+    test3.set(0,6)?;
+    test3.set(10,5)?;
+    println!("\n-- loop test3 rev");
+    for (k, v) in test3.rev() {
+      println!("{:?} = {:?}", k, v);
+    }
     // 事务会在作用域的结尾提交
   }
 
