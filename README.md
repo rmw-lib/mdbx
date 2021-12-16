@@ -792,7 +792,7 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 
 ```
 let begin : &[u8] = &[1,1];
-test0,.range(begin..=&[2]);
+for (k,v) in test0.range(begin..=&[2]) {}
 ```
 
 如果 `begin` 大于 `end`，将会倒序迭代。
