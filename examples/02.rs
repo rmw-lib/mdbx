@@ -12,6 +12,8 @@ mdbx! {
   MDBX // 数据库ENV的变量名
   Test1 // 数据库 Test1
   Test2 // 数据库 Test2
+    key i32
+    val u64
 }
 
 fn main() -> Result<()> {
@@ -34,11 +36,12 @@ fn main() -> Result<()> {
   {
     let tx = w!();
     let test1 = tx | Test1;
-    let test2 = tx | Test2;
 
     test1.set(&[9], &[10, 12])?;
     test1.set(&[2], &[3])?;
     test1.set([8], &[9])?;
+    test1.set("rmw.link", "Down with Data Hegemony")?;
+    test1.set(&"abc", &"012")?;
 
     println!("\n-- loop test1 rev");
     for (k, v) in test1 {
@@ -49,8 +52,15 @@ fn main() -> Result<()> {
 
     println!("\nget after del {:?}", test1.get([8]));
 
-    test2.set("rmw.link", "Down with Data Hegemony")?;
-    test2.set(&"a", &"b")?;
+    let test2 = tx | Test2;
+
+    test2.set(13,32)?;
+    test2.set(16,32)?;
+    test2.set(-15,6)?;
+    test2.set(-10,6)?;
+    test2.set(-12,6)?;
+    test2.set(0,6)?;
+    test2.set(10,5)?;
 
     println!("\n-- loop test2");
     for (k, v) in test2.rev() {
