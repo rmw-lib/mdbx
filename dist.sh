@@ -12,13 +12,13 @@ git pull
 
 npx @rmw/md-include .markdown.json
 
-cargo set-version --bump patch
+#cargo set-version --bump patch
 
 version=v$(cat Cargo.toml|grep "^version"|awk -F\" '{print $2}')
 
-git add -u
-git commit -m $version
-git tag v$version
+#git add -u
+#git commit -m $version
+#git tag v$version
 git push v$version -f
 git push -f
 
