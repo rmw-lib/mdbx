@@ -58,7 +58,6 @@ fn main() -> Result<()> {
 
     println!("\nget after del {:?}", test1.get([8]));
 
-
     let test2 = tx | Test2;
     test2.set("rmw.link", "Down with Data Hegemony")?;
     test2.set(&"abc", &"012")?;
@@ -69,13 +68,13 @@ fn main() -> Result<()> {
 
     let test3 = tx | Test3;
 
-    test3.set(13,32)?;
-    test3.set(16,32)?;
-    test3.set(-15,6)?;
-    test3.set(-10,6)?;
-    test3.set(-12,6)?;
-    test3.set(0,6)?;
-    test3.set(10,5)?;
+    test3.set(13, 32)?;
+    test3.set(16, 32)?;
+    test3.set(-15, 6)?;
+    test3.set(-10, 6)?;
+    test3.set(-12, 6)?;
+    test3.set(0, 6)?;
+    test3.set(10, 5)?;
 
     println!("\n-- loop test3");
     for (k, v) in test3 {
@@ -83,14 +82,14 @@ fn main() -> Result<()> {
     }
 
     let test4 = tx | Test4;
-    test4.set(10,5)?;
-    test4.set(10,0)?;
-    test4.set(13,32)?;
-    test4.set(16,2)?;
-    test4.set(16,1)?;
-    test4.set(16,3)?;
-    test4.set(0,6)?;
-    test4.set(10,5)?;
+    test4.set(10, 5)?;
+    test4.set(10, 0)?;
+    test4.set(13, 32)?;
+    test4.set(16, 2)?;
+    test4.set(16, 1)?;
+    test4.set(16, 3)?;
+    test4.set(0, 6)?;
+    test4.set(10, 5)?;
     println!("\n-- loop test4 rev");
     for (k, v) in test4.rev() {
       println!("{:?} = {:?}", k, v);
