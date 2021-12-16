@@ -666,7 +666,6 @@ fn main() -> Result<()> {
 输出结果
 
 ```
-     Running `target/debug/examples/range`
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 
 > Test0
