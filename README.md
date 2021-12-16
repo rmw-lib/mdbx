@@ -314,10 +314,10 @@ fn main() -> Result<()> {
       println!("{} = {}", k, v);
     }
 
-    dbg!(test1.del_val([8,1],[3])?);
-    dbg!(test1.get([8,1])?.unwrap());
-    dbg!(test1.del_val([8,1],[9])?);
-    dbg!(test1.get([8,1])?);
+    dbg!(test1.del_val([8, 1], [3])?);
+    dbg!(test1.get([8, 1])?.unwrap());
+    dbg!(test1.del_val([8, 1], [9])?);
+    dbg!(test1.get([8, 1])?);
 
     dbg!(test1.del([9])?);
     dbg!(test1.get([9])?);
@@ -540,6 +540,8 @@ libmdbx 数据库有很多标志( [`MDBX_db_flags_t`](https://erthink.github.io/
 
 ##### 顺序遍历
 
+因为实现了 [`std::iter::IntoIterator`](https://doc.rust-lang.org/std/iter/trait.IntoIterator.html) ，可以直接如下遍历 :
+
 `for (k, v) in test1`
 
 ##### `.rev()` 倒序遍历
@@ -606,15 +608,14 @@ fn main() -> Result<()> {
     println!("\n> Test0");
     let tx = &MDBX.w()?;
     let test0 = tx | Test0;
-    test0.set([0], [0,1])?;
-    test0.set([1], [1,2])?;
-    test0.set([2], [2,3])?;
-    test0.set([1,1], [1,3])?;
+    test0.set([0], [0, 1])?;
+    test0.set([1], [1, 2])?;
+    test0.set([2], [2, 3])?;
+    test0.set([1, 1], [1, 3])?;
     test0.set([3], [])?;
 
     range!(test0, [1]..);
     range!(test0, [1]..=[2]);
-
   }
 
   {
@@ -634,6 +635,7 @@ fn main() -> Result<()> {
       println!("{:?}", i);
     }
     range!(test1, 1..3);
+    range!(test1, 3..1);
     range!(test1, 1..=3);
     range!(test1, ..3);
     range!(test1, 3..);
@@ -656,10 +658,10 @@ fn main() -> Result<()> {
     range!(test2, 1..3);
     range!(test2, 1..=3);
     range!(test2, ..3);
-    range!(test2, 3..);
+    range!(test2, 2..);
     range_rev!(test2, ..1);
+    range_rev!(test2, 2..);
     range_rev!(test2, ..=1);
-
   }
 
   Ok(())
@@ -763,6 +765,13 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 (1, 5)
 ```
 
+#### `.range(begin..end)` 区间迭代
+
+区间迭代不支持 [`RangeFull`](https://doc.rust-lang.org/std/ops/struct.RangeFull.html)，也就是不支持用 `..`，请改用上文提到的 [遍历](#遍历) 。
+
+如果 `begin` 大于 `end`，将会逆向迭代。
+
+#### `.rev_range` 逆向区间
 
 ### 自定义数据类型
 

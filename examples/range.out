@@ -1,3 +1,6 @@
+   Compiling mdbx v0.0.4 (/Users/z/rmw/mdbx)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.94s
+     Running `target/debug/examples/range`
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 
 > Test0
@@ -5,12 +8,13 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 # test0.range([1]..)
 (Bin([1]), Bin([1, 2]))
 (Bin([1, 1]), Bin([1, 3]))
+(Bin([1, 2]), Bin([1, 3]))
 (Bin([2]), Bin([2, 3]))
 (Bin([3]), Bin([]))
 
-# test0.range([1]..=[2])
-(Bin([1]), Bin([1, 2]))
+# test0.range([1, 1]..=[2])
 (Bin([1, 1]), Bin([1, 3]))
+(Bin([1, 2]), Bin([1, 3]))
 (Bin([2]), Bin([2, 3]))
 -- all
 (2, 4)
@@ -20,11 +24,18 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 (5, 3)
 (5, 8)
 (9, 1)
+(9, 2)
 (9, 7)
 
 # test1.range(1..3)
 (2, 4)
 (2, 9)
+
+# test1.range(5..2)
+(5, 8)
+(5, 3)
+(3, 8)
+(3, 0)
 
 # test1.range(1..=3)
 (2, 4)
@@ -42,10 +53,12 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 (5, 3)
 (5, 8)
 (9, 1)
+(9, 2)
 (9, 7)
 
 # test1.rev_range(..1)
 (9, 7)
+(9, 2)
 (9, 1)
 (5, 8)
 (5, 3)
@@ -56,6 +69,7 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 
 # test1.rev_range(..=1)
 (9, 7)
+(9, 2)
 (9, 1)
 (5, 8)
 (5, 3)
@@ -79,12 +93,18 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 (1, 5)
 (2, 4)
 
-# test2.range(3..)
+# test2.range(2..)
+(2, 4)
 (9, 1)
 
 # test2.rev_range(..1)
 (9, 1)
 (2, 4)
+
+# test2.rev_range(2..)
+(2, 4)
+(1, 5)
+(0, 0)
 
 # test2.rev_range(..=1)
 (9, 1)

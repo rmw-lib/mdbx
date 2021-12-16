@@ -47,10 +47,12 @@ fn main() -> Result<()> {
     test0.set([1], [1, 2])?;
     test0.set([2], [2, 3])?;
     test0.set([1, 1], [1, 3])?;
+    test0.set([1, 2], [1, 3])?;
     test0.set([3], [])?;
 
     range!(test0, [1]..);
-    range!(test0, [1]..=[2]);
+    let begin : &[u8] = &[1,1];
+    range!(test0, begin..=&[2]);
   }
 
   {
@@ -70,7 +72,7 @@ fn main() -> Result<()> {
       println!("{:?}", i);
     }
     range!(test1, 1..3);
-    range!(test1, 3..1);
+    range!(test1, 5..2);
     range!(test1, 1..=3);
     range!(test1, ..3);
     range!(test1, 3..);
