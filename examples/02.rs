@@ -12,9 +12,12 @@ mdbx! {
   MDBX // 数据库ENV的变量名
   Test1 // 数据库 Test1
   Test2 // 数据库 Test2
+    key Str<'static>
+    val Str<'static>
+  Test3 // 数据库 Test2
     key i32
     val u64
-  Test3 // 数据库 Test3
+  Test4 // 数据库 Test3
     key u64
     val u16
     flag DUPSORT
@@ -42,46 +45,54 @@ fn main() -> Result<()> {
     let test1 = tx | Test1;
 
     test1.set(&[9], &[10, 12])?;
-    test1.set(&[2], &[3])?;
-    test1.set([8], &[9])?;
+    test1.set([8, 1], [9])?;
     test1.set("rmw.link", "Down with Data Hegemony")?;
     test1.set(&"abc", &"012")?;
 
-    println!("\n-- loop test1 rev");
+    println!("\n-- loop test1");
     for (k, v) in test1 {
-      println!("{:?} = {:?}", k, v);
+      println!("{} = {}", k, v);
     }
 
     test1.del([8])?;
 
     println!("\nget after del {:?}", test1.get([8]));
 
+
     let test2 = tx | Test2;
-
-    test2.set(13,32)?;
-    test2.set(16,32)?;
-    test2.set(-15,6)?;
-    test2.set(-10,6)?;
-    test2.set(-12,6)?;
-    test2.set(0,6)?;
-    test2.set(10,5)?;
-
+    test2.set("rmw.link", "Down with Data Hegemony")?;
+    test2.set(&"abc", &"012")?;
     println!("\n-- loop test2");
     for (k, v) in test2 {
-      println!("{:?} = {:?}", k, v);
+      println!("{} = {}", k, v);
     }
 
     let test3 = tx | Test3;
-    test3.set(10,5)?;
-    test3.set(10,0)?;
+
     test3.set(13,32)?;
-    test3.set(16,2)?;
-    test3.set(16,1)?;
-    test3.set(16,3)?;
+    test3.set(16,32)?;
+    test3.set(-15,6)?;
+    test3.set(-10,6)?;
+    test3.set(-12,6)?;
     test3.set(0,6)?;
     test3.set(10,5)?;
-    println!("\n-- loop test3 rev");
-    for (k, v) in test3.rev() {
+
+    println!("\n-- loop test3");
+    for (k, v) in test3 {
+      println!("{:?} = {:?}", k, v);
+    }
+
+    let test4 = tx | Test4;
+    test4.set(10,5)?;
+    test4.set(10,0)?;
+    test4.set(13,32)?;
+    test4.set(16,2)?;
+    test4.set(16,1)?;
+    test4.set(16,3)?;
+    test4.set(0,6)?;
+    test4.set(10,5)?;
+    println!("\n-- loop test4 rev");
+    for (k, v) in test4.rev() {
       println!("{:?} = {:?}", k, v);
     }
     // 事务会在作用域的结尾提交
