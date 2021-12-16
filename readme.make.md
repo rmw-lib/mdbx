@@ -323,7 +323,7 @@ libmdbx 数据库有很多标志( [`MDBX_db_flags_t`](https://erthink.github.io/
 
 ##### 顺序遍历
 
-因为实现了[`std::iter::IntoIterator`](https://doc.rust-lang.org/std/iter/trait.IntoIterator.html) ，可以直接如下遍历 :
+因为实现了 [`std::iter::IntoIterator`](https://doc.rust-lang.org/std/iter/trait.IntoIterator.html) ，可以直接如下遍历 :
 
 `for (k, v) in test1`
 
@@ -363,10 +363,10 @@ libmdbx 的键值都是按 [字典序](https://zh.wikipedia.org/wiki/%E5%AD%97%E
 
 ```
 let begin : &[u8] = &[1,1];
-test0,.range(begin..=&[2]);
+for (k,v) in test0.range(begin..=&[2]) {}
 ```
 
-如果`begin`大于`end`，将会倒序迭代。
+如果 `begin` 大于 `end`，将会倒序迭代。
 
 比如 `test1.range(5..2)`  输出如下 :
 
@@ -377,7 +377,7 @@ test0,.range(begin..=&[2]);
 (3, 0)
 ```
 
-区间迭代不支持 [`RangeFull`](https://doc.rust-lang.org/std/ops/struct.RangeFull.html)，也就是不支持用`..`，请改用上文提到的[遍历](#遍历) 。
+区间迭代不支持 [`RangeFull`](https://doc.rust-lang.org/std/ops/struct.RangeFull.html)，也就是不支持用 `..`，请改用上文提到的 [遍历](#遍历) 。
 
 #### `.rev_range` 倒序区间
 
@@ -395,7 +395,7 @@ test2.rev_range(2..)
 (0, 0)
 ```
 
-倒序区间的`begin`或`end`必须有一个不设置，因为这种情况下，你总是可以用`range(end..begin)`来实现同样的效果。
+倒序区间的 `begin` 或 `end` 必须有一个不设置，因为这种情况下，你总是可以用 `range(end..begin)` 来实现同样的效果。
 
 
 ### 自定义数据类型

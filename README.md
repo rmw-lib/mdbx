@@ -612,10 +612,12 @@ fn main() -> Result<()> {
     test0.set([1], [1, 2])?;
     test0.set([2], [2, 3])?;
     test0.set([1, 1], [1, 3])?;
+    test0.set([1, 2], [1, 3])?;
     test0.set([3], [])?;
 
     range!(test0, [1]..);
-    range!(test0, [1]..=[2]);
+    let begin : &[u8] = &[1,1];
+    range!(test0, begin..=&[2]);
   }
 
   {
@@ -635,7 +637,7 @@ fn main() -> Result<()> {
       println!("{:?}", i);
     }
     range!(test1, 1..3);
-    range!(test1, 3..1);
+    range!(test1, 5..2);
     range!(test1, 1..=3);
     range!(test1, ..3);
     range!(test1, 3..);
@@ -678,12 +680,13 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 # test0.range([1]..)
 (Bin([1]), Bin([1, 2]))
 (Bin([1, 1]), Bin([1, 3]))
+(Bin([1, 2]), Bin([1, 3]))
 (Bin([2]), Bin([2, 3]))
 (Bin([3]), Bin([]))
 
-# test0.range([1]..=[2])
-(Bin([1]), Bin([1, 2]))
+# test0.range([1, 1]..=[2])
 (Bin([1, 1]), Bin([1, 3]))
+(Bin([1, 2]), Bin([1, 3]))
 (Bin([2]), Bin([2, 3]))
 -- all
 (2, 4)
@@ -693,11 +696,18 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 (5, 3)
 (5, 8)
 (9, 1)
+(9, 2)
 (9, 7)
 
 # test1.range(1..3)
 (2, 4)
 (2, 9)
+
+# test1.range(5..2)
+(5, 8)
+(5, 3)
+(3, 8)
+(3, 0)
 
 # test1.range(1..=3)
 (2, 4)
@@ -715,10 +725,12 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 (5, 3)
 (5, 8)
 (9, 1)
+(9, 2)
 (9, 7)
 
 # test1.rev_range(..1)
 (9, 7)
+(9, 2)
 (9, 1)
 (5, 8)
 (5, 3)
@@ -729,6 +741,7 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 
 # test1.rev_range(..=1)
 (9, 7)
+(9, 2)
 (9, 1)
 (5, 8)
 (5, 3)
@@ -752,12 +765,18 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 (1, 5)
 (2, 4)
 
-# test2.range(3..)
+# test2.range(2..)
+(2, 4)
 (9, 1)
 
 # test2.rev_range(..1)
 (9, 1)
 (2, 4)
+
+# test2.rev_range(2..)
+(2, 4)
+(1, 5)
+(0, 0)
 
 # test2.rev_range(..=1)
 (9, 1)
@@ -767,11 +786,46 @@ mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
 
 #### `.range(begin..end)` 区间迭代
 
+对于数字来说，区间就是数字区间。
+
+对于二进制来说，一样可以构建区间，如：
+
+```
+let begin : &[u8] = &[1,1];
+test0,.range(begin..=&[2]);
+```
+
+如果 `begin` 大于 `end`，将会倒序迭代。
+
+比如 `test1.range(5..2)`  输出如下 :
+
+```rust
+(5, 8)
+(5, 3)
+(3, 8)
+(3, 0)
+```
+
 区间迭代不支持 [`RangeFull`](https://doc.rust-lang.org/std/ops/struct.RangeFull.html)，也就是不支持用 `..`，请改用上文提到的 [遍历](#遍历) 。
 
-如果 `begin` 大于 `end`，将会逆向迭代。
+#### `.rev_range` 倒序区间
 
-#### `.rev_range` 逆向区间
+如果想获取小于等于某个值的倒序区间，可以这样
+
+```
+test2.rev_range(2..)
+```
+
+将输出
+
+```
+(2, 4)
+(1, 5)
+(0, 0)
+```
+
+倒序区间的 `begin` 或 `end` 必须有一个不设置，因为这种情况下，你总是可以用 `range(end..begin)` 来实现同样的效果。
+
 
 ### 自定义数据类型
 
