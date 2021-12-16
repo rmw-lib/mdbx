@@ -57,7 +57,11 @@
 
 然后运行 `cargo run --example 01` ，就运行了 `examples/01.rs`
 
-如果是自己的项目，请先运行 `cargo add mdbx lazy_static`
+如果是自己的项目，请先运行 :
+
+```bash
+cargo add mdbx lazy_static ctor paste
+```
 
 ### 示例 1 : 写 `set(key,val)` 和 读 `.get(key)`
 
@@ -616,7 +620,7 @@ fn main() -> Result<()> {
     test0.set([3], [])?;
 
     range!(test0, [1]..);
-    let begin : &[u8] = &[1,1];
+    let begin: &[u8] = &[1, 1];
     range!(test0, begin..=&[2]);
   }
 
@@ -825,7 +829,6 @@ test2.rev_range(2..)
 ```
 
 倒序区间的 `begin` 或 `end` 必须有一个不设置，因为这种情况下，你总是可以用 `range(end..begin)` 来实现同样的效果。
-
 
 ### 自定义数据类型
 
