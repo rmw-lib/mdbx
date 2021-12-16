@@ -135,7 +135,9 @@ test1 get Ok(Some(Bin([6])))
 
 1. 数据库环境的变量名
 
-2. 返回一个  对象，[mdbx:: env:: Config](https://docs.rs/mdbx/latest/src/mdbx/env.rs.html#27-35) ，默认配置如下。
+2. 返回一个  对象，[mdbx:: env:: Config](https://docs.rs/mdbx/latest/src/mdbx/env.rs.html#27-35) 。
+
+   我们使用默认配置，因为 `Env` 实现了 `From<Into<PathBuf>>`，所以数据库路径 `into()` 即可，默认配置如下。
 
    ```rust
    #[derive(Clone, Debug)]
@@ -176,7 +178,6 @@ test1 get Ok(Some(Bin([6])))
 
    其他参数含义参见 [libmdbx 的文档](https://erthink.github.io/libmdbx/group__c__opening.html#ga9138119a904355d245777c4119534061) 。
 
-   我们使用默认配置，因为 `Env` 实现了 `From<Into<PathBuf>>`，所以数据库路径 `into()` 即可。
 
 3. 数据库读事务宏的名称，默认值为 `r`
 
@@ -242,17 +243,16 @@ match test.get([1, 2])? {
 }
 ```
 
-`set` 是写，`get` 是读，任何实现了 `AsRef<[u8]>` 的对象都可以写入数据库。
+`set` 是写，`get` 是读，任何实现了 [`AsRef<[u8]>`](https://doc.rust-lang.org/std/convert/trait.AsRef.html) 的对象都可以写入数据库。
 
 `get` 出来的东西是 `Ok(Some(Bin([6])))`，可以转为 `&[u8]`。
 
-### 遍历
+### 第二个例子
 
 我们来看第二个例子 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) :
 
 ```rust
 use anyhow::{Ok, Result};
-
 use mdbx::prelude::*;
 
 env_rw!(
@@ -262,9 +262,7 @@ env_rw!(
     db_path.set_extension("mdb");
     println!("mdbx file path {}", db_path.display());
     db_path.into()
-  },
-  r,
-  w
+  }
 );
 
 mdbx! {
@@ -327,7 +325,7 @@ fn main() -> Result<()> {
 }
 ```
 
-vi 运行输出如下
+运行输出如下
 
 ```
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/02.mdb
@@ -346,6 +344,8 @@ get after del Ok(None)
 Bin([114, 109, 119, 46, 108, 105, 110, 107]) = Bin([68, 111, 119, 110, 32, 119, 105, 116, 104, 32, 68, 97, 116, 97, 32, 72, 101, 103, 101, 109, 111, 110, 121])
 Bin([97]) = Bin([98])
 ```
+
+
 
 ### 数据类型
 

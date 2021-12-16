@@ -193,7 +193,7 @@ match test.get([1, 2])? {
 
 `get` 出来的东西是 `Ok(Some(Bin([6])))`，可以转为 `&[u8]`。
 
-### 遍历
+### 第二个例子
 
 我们来看第二个例子 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) :
 
@@ -206,6 +206,8 @@ match test.get([1, 2])? {
 ```
 #include examples/02.out
 ```
+
+#### 快捷读写
 
 ### 数据类型
 
