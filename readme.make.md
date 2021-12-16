@@ -61,13 +61,13 @@
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs)
 
-rust 代码如下 :
+#### 代码
 
 ```rust
 #include examples/01.rs
 ```
 
-运行输出如下 :
+#### 运行输出
 
 ```
 #include examples/01.out
@@ -201,11 +201,14 @@ match test.get([1, 2])? {
 
 这个例子中，`env_rw!` 省略了，第三、第四个参数（`r`, `w`）。
 
+#### 代码
+
 ```rust
 #include examples/02.rs
 ```
 
-运行输出如下
+#### 运行输出
+
 
 ```
 #include examples/02.out
@@ -344,7 +347,7 @@ libmdbx 的键值都是按 [字典序](https://zh.wikipedia.org/wiki/%E5%AD%97%E
 #include examples/range.rs
 ```
 
-输出结果
+#### 运行输出
 
 ```
 #include examples/range.out

@@ -118,7 +118,7 @@ fn main() -> Result<()> {
 }
 ```
 
-运行输出如下 :
+#### 运行输出
 
 ```
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/01.mdb
@@ -374,7 +374,8 @@ fn main() -> Result<()> {
 }
 ```
 
-运行输出如下
+#### 运行输出
+
 
 ```
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/02.mdb
@@ -663,7 +664,7 @@ fn main() -> Result<()> {
 }
 ```
 
-输出结果
+#### 输出结果
 
 ```
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
