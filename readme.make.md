@@ -188,7 +188,7 @@ match test.get([1, 2])? {
 }
 ```
 
-`set` 是写，`get` 是读，任何实现了 `AsRef<[u8]>` 的对象都可以写入数据库。
+`set` 是写，`get` 是读，任何实现了 [`AsRef<[u8]>`](https://doc.rust-lang.org/std/convert/trait.AsRef.html) 的对象都可以写入数据库。
 
 `get` 出来的东西是 `Ok(Some(Bin([6])))`，可以转为 `&[u8]`。
 

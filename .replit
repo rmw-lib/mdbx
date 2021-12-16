@@ -1,3 +1,0 @@
-language = "rust"
-run = "./.envrc && ~/.cargo/bin/cargo +nightly run --example 01"
-
