@@ -63,7 +63,7 @@
 
 我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs)
 
-rust 代码如下 :
+#### 代码
 
 ```rust
 use anyhow::{Ok, Result};
@@ -254,6 +254,8 @@ match test.get([1, 2])? {
 我们来看第二个例子 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) :
 
 这个例子中，`env_rw!` 省略了，第三、第四个参数（`r`, `w`）。
+
+#### 代码
 
 ```rust
 use anyhow::{Ok, Result};
@@ -664,7 +666,7 @@ fn main() -> Result<()> {
 }
 ```
 
-#### 输出结果
+#### 运行输出
 
 ```
 mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
