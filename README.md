@@ -251,19 +251,18 @@ match test.get([1, 2])? {
 
 我们来看第二个例子 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) :
 
+这个例子中，`env_rw!` 省略了，第三、第四个参数（`r`, `w`）。
+
 ```rust
 use anyhow::{Ok, Result};
 use mdbx::prelude::*;
 
-env_rw!(
-  MDBX,
-  {
-    let mut db_path = std::env::current_exe().unwrap();
-    db_path.set_extension("mdb");
-    println!("mdbx file path {}", db_path.display());
-    db_path.into()
-  }
-);
+env_rw!(MDBX, {
+  let mut db_path = std::env::current_exe().unwrap();
+  db_path.set_extension("mdb");
+  println!("mdbx file path {}", db_path.display());
+  db_path.into()
+});
 
 mdbx! {
   MDBX // 数据库ENV的变量名
@@ -272,23 +271,19 @@ mdbx! {
 }
 
 fn main() -> Result<()> {
-  {
-    // 快捷写入
-    w!(Test1).set([2, 3], [4, 5])?;
-  }
+  // 快捷写入
+  w!(Test1).set([2, 3], [4, 5])?;
 
-  {
-    // 快捷读取
-    match r!(Test1).get([2, 3])? {
-      Some(r) => {
-        println!(
-          "\nu16::from_le_bytes({:?}) = {}",
-          r,
-          u16::from_le_bytes((*r).try_into()?)
-        );
-      }
-      None => unreachable!(),
+  // 快捷读取
+  match r!(Test1).get([2, 3])? {
+    Some(r) => {
+      println!(
+        "\nu16::from_le_bytes({:?}) = {}",
+        r,
+        u16::from_le_bytes((*r).try_into()?)
+      );
     }
+    None => unreachable!(),
   }
 
   // 在同一个事务中对多个数据库进行多个操作
@@ -345,6 +340,9 @@ Bin([114, 109, 119, 46, 108, 105, 110, 107]) = Bin([68, 111, 119, 110, 32, 119, 
 Bin([97]) = Bin([98])
 ```
 
+#### 快捷读写
+
+有时候
 
 
 ### 数据类型

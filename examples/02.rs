@@ -16,10 +16,10 @@ mdbx! {
 
 fn main() -> Result<()> {
   // 快捷写入
-  w!(Test1).set([2, 3], [4, 5])?;
+  w!(Test1.set [2, 3],[4, 5]);
 
   // 快捷读取
-  match r!(Test1).get([2, 3])? {
+  match r!(Test1.get [2, 3]) {
     Some(r) => {
       println!(
         "\nu16::from_le_bytes({:?}) = {}",

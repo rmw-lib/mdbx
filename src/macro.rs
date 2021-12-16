@@ -1,4 +1,32 @@
 #[macro_export]
+macro_rules! dollar {
+  ($($body:tt)*) => {
+    macro_rules! __dollar { $($body)* }
+    __dollar!($);
+  }
+}
+
+#[macro_export]
+macro_rules! rw {
+  ($env:ident, $rw:ident,$x:ident) => {
+    dollar! {
+      ($d:tt)=> {
+        #[macro_export]
+        macro_rules! $rw {
+          () => {
+            &$env.$x()?
+          };
+          ($db:ident.$func:ident$d ( $d arg:expr),*) => {{
+            let tx = $rw!();
+            (tx | $db).$func($d($d arg,)*)?
+          }};
+        }
+      }
+    }
+  };
+}
+
+#[macro_export]
 macro_rules! env_rw {
   ($env:ident, $into:expr) => {
     env_rw!($env, $into, r, w);
@@ -8,24 +36,11 @@ macro_rules! env_rw {
       pub static ref $env: Env = $into;
     }
 
-    #[macro_export]
-    macro_rules! $w {
-      () => {
-        &$env.w()?
-      };
-      ($db:ident) => {{
-        $w!() | $db
-      }};
-    }
-
-    #[macro_export]
-    macro_rules! $r {
-      () => {
-        &$env.r()?
-      };
-      ($db:ident) => {
-        $r!() | $db
-      };
+    dollar! {
+      ($d:tt)=> {
+        rw!($env, $r, r);
+        rw!($env, $w, w);
+      }
     }
   };
 }
