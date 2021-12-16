@@ -47,7 +47,9 @@
 
 与此同时，[mdbx 改进了不少 lmdb 的缺憾](https://github.com/erthink/libmdbx#improvements-beyond-lmdb)，因此 Erigon（下一代以太坊客户端）最近从 LMDB 切换到了 MDBX [^erigon] 。
 
-## 如何运行示例
+## 使用教程
+
+### 如何运行示例
 
 首先克隆代码库 `git clone git@github.com:rmw-lib/mdbx.git --depth=1 && cd mdbx`
 
@@ -57,7 +59,7 @@
 
 ### 写和读 : set & get
 
-我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs) ([点此在线运行](https://replit.com/@gcxfd/mdbx?lite=icon_title_nologo&theme=replitLight#examples/01.rs)):
+我们先来看一个简单的例子 [examples/01.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/01.rs)
 
 rust 代码如下 :
 
@@ -204,19 +206,19 @@ vi 运行输出如下
 #include examples/02.out
 ```
 
-## 数据类型
+### 数据类型
 
 ### 预置数据类型
 
 ### 自定义数据类型
 
-## 一个键对应多个值
+### 一个键对应多个值
 
-## 删除一个精确匹配的键值对
+### 删除一个精确匹配的键值对
 
-## 迭代器
+### 迭代器
 
-## 数据库标志
+### 数据库标志
 
 [mdbx db flag list](https://erthink.github.io/libmdbx/group__c__dbi.html#gafe3bddb297b3ab0d828a487c5726f76a)
 
@@ -240,16 +242,18 @@ MDBX_DB_ACCEDE
 该 MDBX_DB_ACCEDE 标志旨在打开使用未知标志（MDBX_REVERSEKEY、MDBX_DUPSORT、MDBX_INTEGERKEY、MDBX_DUPFIXED、MDBX_INTEGERDUP 和 MDBX_REVERSEDUP）创建的现有子数据库。
 在这种情况下，子数据库不会返回 MDBX_INCOMPATIBLE 错误，而是使用创建它的标志打开，然后应用程序可以通过 mdbx_dbi_flags()确定实际标志。
 
-### 默认自动生成的数据库标志
+#### 默认自动生成的数据库标志
 
-## 数据库环境全局设置
+### 数据库环境全局设置
 
-### 数据库最大个数
+#### 数据库最大个数
 
 maxdbs 打开数据的时可以更新原有设置。
 一开始可以设置小一点的值，有需要再加大。
 
 https://github.com/erthink/libmdbx#limitations
+
+## 使用注意
 
 ### 键的长度
 
