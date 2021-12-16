@@ -22,7 +22,7 @@ mdbx! {
 
 macro_rules! range_rev {
   ($var:ident, $range:expr) => {
-    println!("\n-- {} rev_range {:?}", stringify!($var), $range);
+    println!("\n# {}.rev_range({:?})", stringify!($var), $range);
     for i in $var.range_rev($range) {
       println!("{:?}", i);
     }
@@ -31,7 +31,7 @@ macro_rules! range_rev {
 
 macro_rules! range {
   ($var:ident, $range:expr) => {
-    println!("\n-- {} range {:?}", stringify!($var), $range);
+    println!("\n# {}.range({:?})", stringify!($var), $range);
     for i in $var.range($range) {
       println!("{:?}", i);
     }
@@ -40,7 +40,7 @@ macro_rules! range {
 
 fn main() -> Result<()> {
   {
-    println!("\n### Test0");
+    println!("\n> Test0");
     let tx = &MDBX.w()?;
     let test0 = tx | Test0;
     test0.set([0], [0,1])?;
@@ -79,7 +79,7 @@ fn main() -> Result<()> {
   }
 
   {
-    println!("\n### Test2");
+    println!("\n> Test2");
     let tx = &MDBX.w()?;
     let test2 = tx | Test2;
     test2.set(2, 9)?;

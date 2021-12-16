@@ -551,11 +551,216 @@ libmdbx 的键值都是按 [字典序](https://zh.wikipedia.org/wiki/%E5%AD%97%E
 
   因为自动加上了数据库标志（ `u32`/`u64`/`usize` 会加上 `INTEGERKEY`，其他根据机器编码自动判断是否加上 `REVERSEKEY` ） ，会按数字从小到大的顺序排列。
 
-* 对于有符号的数字
+* 对于有符号数字
 
   顺序是：0 在第一个，然后从小到大遍历所有正数，然后从小到大遍历所有负数。
 
 ### 区间迭代器
+
+```rust
+use anyhow::Result;
+use mdbx::prelude::*;
+
+env_rw!(MDBX, {
+  let mut db_path = std::env::current_exe().unwrap();
+  db_path.set_extension("mdb");
+  println!("mdbx file path {}", db_path.display());
+  db_path.into()
+});
+
+mdbx! {
+  MDBX
+  Test0
+  Test1
+    key u16
+    val u64
+    flag DUPSORT
+  Test2
+    key u32
+    val u64
+}
+
+macro_rules! range_rev {
+  ($var:ident, $range:expr) => {
+    println!("\n# {}.rev_range({:?})", stringify!($var), $range);
+    for i in $var.range_rev($range) {
+      println!("{:?}", i);
+    }
+  };
+}
+
+macro_rules! range {
+  ($var:ident, $range:expr) => {
+    println!("\n# {}.range({:?})", stringify!($var), $range);
+    for i in $var.range($range) {
+      println!("{:?}", i);
+    }
+  };
+}
+
+fn main() -> Result<()> {
+  {
+    println!("\n> Test0");
+    let tx = &MDBX.w()?;
+    let test0 = tx | Test0;
+    test0.set([0], [0,1])?;
+    test0.set([1], [1,2])?;
+    test0.set([2], [2,3])?;
+    test0.set([1,1], [1,3])?;
+    test0.set([3], [])?;
+
+    range!(test0, [1]..);
+    range!(test0, [1]..=[2]);
+
+  }
+
+  {
+    let tx = &MDBX.w()?;
+
+    let test1 = tx | Test1;
+    test1.set(2, 9)?;
+    test1.set(2, 4)?;
+    test1.set(9, 7)?;
+    test1.set(3, 0)?;
+    test1.set(3, 8)?;
+    test1.set(5, 3)?;
+    test1.set(5, 8)?;
+    test1.set(9, 1)?;
+    println!("-- all");
+    for i in test1 {
+      println!("{:?}", i);
+    }
+    range!(test1, 1..3);
+    range!(test1, 1..=3);
+    range!(test1, ..3);
+    range!(test1, 3..);
+    range_rev!(test1, ..1);
+    range_rev!(test1, ..=1);
+  }
+
+  {
+    println!("\n> Test2");
+    let tx = &MDBX.w()?;
+    let test2 = tx | Test2;
+    test2.set(2, 9)?;
+    test2.set(1, 2)?;
+    test2.set(2, 4)?;
+    test2.set(1, 5)?;
+    test2.set(9, 7)?;
+    test2.set(9, 1)?;
+    test2.set(0, 0)?;
+
+    range!(test2, 1..3);
+    range!(test2, 1..=3);
+    range!(test2, ..3);
+    range!(test2, 3..);
+    range_rev!(test2, ..1);
+    range_rev!(test2, ..=1);
+
+  }
+
+  Ok(())
+}
+```
+
+输出结果
+
+```
+     Running `target/debug/examples/range`
+mdbx file path /Users/z/rmw/mdbx/target/debug/examples/range.mdb
+
+> Test0
+
+# test0.range([1]..)
+(Bin([1]), Bin([1, 2]))
+(Bin([1, 1]), Bin([1, 3]))
+(Bin([2]), Bin([2, 3]))
+(Bin([3]), Bin([]))
+
+# test0.range([1]..=[2])
+(Bin([1]), Bin([1, 2]))
+(Bin([1, 1]), Bin([1, 3]))
+(Bin([2]), Bin([2, 3]))
+-- all
+(2, 4)
+(2, 9)
+(3, 0)
+(3, 8)
+(5, 3)
+(5, 8)
+(9, 1)
+(9, 7)
+
+# test1.range(1..3)
+(2, 4)
+(2, 9)
+
+# test1.range(1..=3)
+(2, 4)
+(2, 9)
+(3, 0)
+(3, 8)
+
+# test1.range(..3)
+(2, 4)
+(2, 9)
+
+# test1.range(3..)
+(3, 0)
+(3, 8)
+(5, 3)
+(5, 8)
+(9, 1)
+(9, 7)
+
+# test1.rev_range(..1)
+(9, 7)
+(9, 1)
+(5, 8)
+(5, 3)
+(3, 8)
+(3, 0)
+(2, 9)
+(2, 4)
+
+# test1.rev_range(..=1)
+(9, 7)
+(9, 1)
+(5, 8)
+(5, 3)
+(3, 8)
+(3, 0)
+(2, 9)
+(2, 4)
+
+> Test2
+
+# test2.range(1..3)
+(1, 5)
+(2, 4)
+
+# test2.range(1..=3)
+(1, 5)
+(2, 4)
+
+# test2.range(..3)
+(0, 0)
+(1, 5)
+(2, 4)
+
+# test2.range(3..)
+(9, 1)
+
+# test2.rev_range(..1)
+(9, 1)
+(2, 4)
+
+# test2.rev_range(..=1)
+(9, 1)
+(2, 4)
+(1, 5)
+```
+
 
 ### 自定义数据类型
 

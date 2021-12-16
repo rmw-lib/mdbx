@@ -17,4 +17,4 @@ for file in glob(join(PWD,"examples/*.rs")):
   sed -i '1,3d' @(out)
 
 
-
+./md.xsh

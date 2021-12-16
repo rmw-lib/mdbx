@@ -1,7 +1,6 @@
 #!/usr/bin/env xonsh
 
-$RAISE_SUBPROC_ERROR = True
-$XONSH_SHOW_TRACEBACK = True
+p"~/.xonshrc".exists() && source ~/.xonshrc
 
 from os.path import dirname,abspath,exists,join
 
