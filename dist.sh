@@ -19,7 +19,7 @@ version=v$(cat Cargo.toml|grep "^version"|awk -F\" '{print $2}')
 git add -u
 git commit -m $version
 git tag $version
-git push $version 
+git push origin $version 
 git push 
 
 cargo +nightly publish
