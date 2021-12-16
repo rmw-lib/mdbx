@@ -16,9 +16,8 @@ version=v$(cat Cargo.toml|grep "^version"|awk -F\" '{print $2}')
 
 git add -u
 git commit -m mdbx-proc-$version
-git tag $version
-git push
-git push $version
+git tag mdbx-proc-$version
+git push mdbx-proc-$version
 
 cargo +nightly publish
 
