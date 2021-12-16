@@ -340,6 +340,17 @@ libmdbx 的键值都是按 [字典序](https://zh.wikipedia.org/wiki/%E5%AD%97%E
 
 ### 区间迭代器
 
+```rust
+#include examples/range.rs
+```
+
+输出结果
+
+```
+#include examples/range.out
+```
+
+
 ### 自定义数据类型
 
 ## 使用注意
