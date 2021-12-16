@@ -272,10 +272,10 @@ mdbx! {
 
 fn main() -> Result<()> {
   // 快捷写入
-  w!(Test1).set([2, 3], [4, 5])?;
+  w!(Test1.set [2, 3],[4, 5]);
 
   // 快捷读取
-  match r!(Test1).get([2, 3])? {
+  match r!(Test1.get [2, 3]) {
     Some(r) => {
       println!(
         "\nu16::from_le_bytes({:?}) = {}",
@@ -342,7 +342,22 @@ Bin([97]) = Bin([98])
 
 #### 快捷读写
 
-有时候
+若只是想简单的读取或写入单行数据，我们可以用宏的语法糖。
+
+读数据
+
+```
+r!(Test1.get [2, 3])
+```
+
+写数据
+
+```rust
+w!(Test1.set [2, 3],[4, 5]);
+```
+
+
+都一行搞定， 正如 [examples/02.rs](https://github.com/rmw-lib/mdbx/blob/master/examples/02.rs) 写的那样。
 
 
 ### 数据类型
