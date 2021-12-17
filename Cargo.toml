@@ -1,0 +1,26 @@
+[package]
+name = "mdbx"
+description = "libmdbx rust wrapper"
+version = "0.0.5"
+license = "MPL-2.0"
+edition = "2021"
+readme = "README.md"
+repository = "https://github.com/rmw-lib/mdbx"
+
+[lib]
+crate-type = ["lib"]
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+#ffi = {package = "mdbx-ffi",path = "../mdbx-ffi" }
+ffi = { package = "mdbx-ffi", version = "0.0.5" }
+#mdbx-proc = {path = "./mdbx-proc"}
+mdbx-proc = "0.1.1"
+os_str_bytes = "6.0.0"
+anyhow = "1.0.51"
+libc = "0.2.112"
+lazy_static = "1.4.0"
+log = "0.4.14"
+ctor = "0.1.21"
+paste = "1.0.6"
+

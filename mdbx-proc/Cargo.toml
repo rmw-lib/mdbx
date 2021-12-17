@@ -1,0 +1,12 @@
+[package]
+name = "mdbx-proc"
+version = "0.1.1"
+license = "MPL-2.0"
+readme = "README.md"
+edition = "2021"
+description = "mdbx proc macro"
+
+[lib]
+proc-macro = true
+
+

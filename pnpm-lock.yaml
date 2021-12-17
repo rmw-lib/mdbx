@@ -1,0 +1,21 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@rmw/md-include': ^0.4.8
+
+dependencies:
+  '@rmw/md-include': 0.4.8
+
+packages:
+
+  /@rmw/md-include/0.4.8:
+    resolution: {integrity: sha512-wH8/fS9HgF3QFJOLTbkUl2w98wLh64VZvAlVjBkZ7ymZO3vzSKbjP0aW9ksZ+mPwvwzgdf0YbBgZakzuTnp9tw==}
+    hasBin: true
+    dependencies:
+      q: 1.5.1
+    dev: false
+
+  /q/1.5.1:
+    resolution: {integrity: sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=}
+    engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
+    dev: false

@@ -1,0 +1,4 @@
+mdbx file path /Users/z/rmw/mdbx/target/debug/examples/01.mdb
+mdbx version https://github.com/erthink/libmdbx/releases/tag/v0.11.2
+test1 get Ok(Some(Bin([6])))
+[6]

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@rmw/md-include": "^0.4.8"
+  }
+}

@@ -1,0 +1,6 @@
+[submodule "git-example"]
+	path = git/example
+	url = git@github.com:rmw-lib/mdbx-example.git
+[submodule "git/speedy"]
+	path = git/speedy
+	url = git@github.com:rmw-lib/mdbx-speedy.git
