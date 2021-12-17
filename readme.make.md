@@ -24,7 +24,7 @@
 
 目前，现有的 `mdbx` 的 `rust` 封装 [mdbx-rs(mdbx-sys)不支持 windows](https://github.com/vorot93/mdbx-rs/issues/1)，于是我自己动手封装一个支持 windows 的版本。
 
-支持存储自定义rust类型。 支持多线程访问。
+支持存储自定义 rust 类型。 支持多线程访问。
 
 可以一个模块中用 `lazy_static` 定义好数据库，然后用简单引入并使用，比如:
 
