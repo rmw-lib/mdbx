@@ -4,7 +4,7 @@
 
 [libmdbx](https://github.com/erthink/libmdbx) is a super fast embedded database.
 
-This is my rust wrapper for `libmdbx`.
+[crates.io/crates/mdbx](https://crates.io/crates/mdbx) is my rust wrapper for `libmdbx`.
 
 Supports storing custom rust types.
 Supports multi-threaded access.
@@ -25,7 +25,7 @@ let user = r!(User.get id);
 
 [libmdbx](https://github.com/erthink/libmdbx) 是一个超级快的嵌入式数据库。
 
-这是我对`libmdbx`的rust包装。
+[crates.io/crates/mdbx](https://crates.io/crates/mdbx) 是我对`libmdbx`的rust包装。
 
 支持存储自定义rust类型。
 支持多线程访问。
